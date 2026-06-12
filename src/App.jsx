@@ -4,6 +4,7 @@ import GroupsSection from './componentes/GroupsSection/GroupsSection'
 import Hero from './componentes/Hero/Hero'
 import KnockoutSection from './componentes/KnockoutSection/KnockoutSection'
 import LoginPanel from './componentes/LoginPanel/LoginPanel'
+import TournamentDashboard from './componentes/TournamentDashboard/TournamentDashboard'
 import { buildKnockoutBracket, calculateGroupStandings, countries, createGroupMatches, groups, knockoutRounds } from './data/worldCupData'
 import { clearAdminToken, deleteResult, getApiBaseUrl, getResults, saveResult, setAdminToken } from './services/api'
 import './App.css'
@@ -16,6 +17,10 @@ function App() {
   const [loginOpen, setLoginOpen] = useState(false)
   const [partidosHoy, setPartidosHoy] = useState(false)
   const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem(ADMIN_STORAGE_KEY) === 'true')
+  const [saveStatus, setSaveStatus] = useState({
+    type: getApiBaseUrl() ? 'idle' : 'offline',
+    text: getApiBaseUrl() ? '' : 'Modo local: back no configurado',
+  })
   const [results, setResults] = useState(() => {
     const savedResults = localStorage.getItem(RESULTS_STORAGE_KEY)
 
@@ -38,6 +43,7 @@ function App() {
         }
       } catch (error) {
         console.info('Usando resultados locales: el back no esta disponible.')
+        setSaveStatus({ type: 'offline', text: 'Sin conexion con el back' })
       }
     }
 
@@ -59,26 +65,35 @@ function App() {
   )
 
   const knockoutBracket = useMemo(() => buildKnockoutBracket(results, knockoutRounds), [results])
+  const groupMatches = useMemo(
+    () =>
+      groups.flatMap((group) =>
+        createGroupMatches(group).map((match) => ({
+          ...match,
+          groupName: `Grupo ${group.id}`,
+          kickoff: results[match.id]?.kickoff || match.kickoff,
+        })),
+      ),
+    [results],
+  )
   const todayMatches = useMemo(() => {
     const todayKey = new Intl.DateTimeFormat('en-CA').format(new Date())
 
-    return groups.flatMap((group) =>
-      createGroupMatches(group)
-        .map((match) => ({
-          ...match,
-          groupName: `Grupo ${group.id}`,
-          result: results[match.id] || {},
-          kickoff: results[match.id]?.kickoff || match.kickoff,
-        }))
-        .filter((match) => {
-          if (!match.kickoff) return false
+    return groupMatches
+      .map((match) => ({
+        ...match,
+        result: results[match.id] || {},
+      }))
+      .filter((match) => {
+        if (!match.kickoff) return false
 
-          return new Intl.DateTimeFormat('en-CA').format(new Date(match.kickoff)) === todayKey
-        }),
-    )
-  }, [results])
+        return new Intl.DateTimeFormat('en-CA').format(new Date(match.kickoff)) === todayKey
+      })
+  }, [groupMatches, results])
 
   const handleResultChange = async (matchId, result) => {
+    const previousResults = results
+
     setResults((currentResults) => ({
       ...currentResults,
       [matchId]: {
@@ -94,38 +109,57 @@ function App() {
       editsGoals &&
       ((nextHomeGoals === undefined || nextHomeGoals === '') || (nextAwayGoals === undefined || nextAwayGoals === ''))
 
-    if (hasPartialScore) return
+    if (hasPartialScore) {
+      setSaveStatus({ type: 'idle', text: '' })
+      return
+    }
 
-    if (!getApiBaseUrl()) return
+    if (!getApiBaseUrl()) {
+      setSaveStatus({ type: 'offline', text: 'Modo local: back no configurado' })
+      return
+    }
 
     try {
+      setSaveStatus({ type: 'saving', text: 'Guardando...' })
       const data = await saveResult(matchId, result)
 
       if (data.results) {
         setResults(data.results)
+        setSaveStatus({ type: 'success', text: 'Guardado en MongoDB' })
       }
     } catch (error) {
       console.info('Resultado guardado localmente: el back no esta disponible.')
+      setResults(previousResults)
+      setSaveStatus({ type: 'error', text: error.message || 'Error al guardar' })
     }
   }
 
   const handleResultDelete = async (matchId) => {
+    const previousResults = results
+
     setResults((currentResults) => {
       const nextResults = { ...currentResults }
       delete nextResults[matchId]
       return nextResults
     })
 
-    if (!getApiBaseUrl()) return
+    if (!getApiBaseUrl()) {
+      setSaveStatus({ type: 'offline', text: 'Modo local: back no configurado' })
+      return
+    }
 
     try {
+      setSaveStatus({ type: 'saving', text: 'Eliminando...' })
       const data = await deleteResult(matchId)
 
       if (data.results) {
         setResults(data.results)
+        setSaveStatus({ type: 'success', text: 'Resultado eliminado' })
       }
     } catch (error) {
       console.info('Resultado eliminado localmente: el back no esta disponible.')
+      setResults(previousResults)
+      setSaveStatus({ type: 'error', text: error.message || 'Error al eliminar' })
     }
   }
 
@@ -143,8 +177,10 @@ function App() {
         partidosHoy={partidosHoy}
         todayMatches={todayMatches}
         onClosePartidosHoy={() => setPartidosHoy(false)}
+        saveStatus={saveStatus}
       />
       <main>
+        <TournamentDashboard matches={groupMatches} results={results} />
         <GroupsSection
           groups={groupsWithStandings}
           isAdmin={isAdmin}

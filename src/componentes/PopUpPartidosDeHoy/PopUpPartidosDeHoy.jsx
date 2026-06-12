@@ -56,7 +56,7 @@ function PopUpPartidosDeHoy({ open, matches = [], onClose }) {
                   <div className="today-match-teams">
                     <div className="today-team">
                       <img src={getFlagUrl(match.home)} alt="" loading="lazy" />
-                      <strong>{match.home}</strong>
+                      <p>{match.home}</p>
                     </div>
 
                     <div className="today-score" aria-label={finished ? 'Resultado cargado' : 'Partido pendiente'}>
@@ -72,7 +72,7 @@ function PopUpPartidosDeHoy({ open, matches = [], onClose }) {
                     </div>
 
                     <div className="today-team away">
-                      <strong>{match.away}</strong>
+                      <p>{match.away}</p>
                       <img src={getFlagUrl(match.away)} alt="" loading="lazy" />
                     </div>
                   </div>

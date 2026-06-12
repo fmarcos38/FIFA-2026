@@ -1,5 +1,5 @@
 .hero-section {
-  min-height: 92svh;
+  min-height: 100svh;
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid var(--line);
@@ -69,33 +69,57 @@
   letter-spacing: 0.08em;
 }
 
-.nav-links {
+.admin-live-badge {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(0, 255, 178, 0.34);
+  border-radius: 999px;
+  color: var(--fluo);
+  background: rgba(0, 255, 178, 0.08);
+  padding: 0 10px;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.cont-login{
+  display: flex;
+  justify-content: end;
+}
+
+.admin-access {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.menu-toggle {
-  display: none;
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--line);
+.admin-door-button {
+  width: 20px;
+  height: 20px;
+  display: inline-grid;
+  place-items: center;
+  border: none;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
+  background-color: transparent;
+  font: inherit;
   cursor: pointer;
 }
 
-.menu-toggle span {
-  width: 18px;
-  height: 2px;
-  display: block;
-  margin: 4px auto;
-  border-radius: 999px;
-  background: var(--text-strong);
+.icono-log{
+  color: var(--text-strong);
 }
 
-.nav-links a,
-.nav-links button,
+.admin-door-button:hover {
+  border-color: var(--fluo);
+  color: var(--fluo);
+}
+
+.admin-door-button.is-logout:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
 .ghost-action,
 .primary-action {
   min-height: 40px;
@@ -112,8 +136,6 @@
   cursor: pointer;
 }
 
-.nav-links a:hover,
-.nav-links button:hover,
 .ghost-action:hover {
   border-color: var(--line-strong);
   color: var(--text-strong);
@@ -166,6 +188,10 @@
 }
 
 .hero-stats span {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
   padding: 18px;
   color: var(--muted);
   border-right: 1px solid var(--line);
@@ -176,10 +202,44 @@
 }
 
 .hero-stats strong {
-  display: block;
+  display: inline;
   color: var(--text-strong);
   font-size: 1.9rem;
   line-height: 1;
+}
+
+.save-status {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 30;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 13px;
+  color: var(--text-strong);
+  background: rgba(8, 13, 24, 0.94);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.34);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.save-status.success {
+  border-color: rgba(0, 255, 178, 0.4);
+  color: var(--fluo);
+}
+
+.save-status.error,
+.save-status.offline {
+  border-color: rgba(255, 61, 242, 0.38);
+  color: var(--pink);
+}
+
+.save-status.saving {
+  border-color: rgba(23, 216, 255, 0.38);
+  color: var(--cyan);
 }
 
 @media (max-width: 1180px) {
@@ -224,28 +284,8 @@
     padding: 14px;
   }
 
-  .menu-toggle {
-    display: block;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    z-index: 4;
-    display: none;
-    padding: 10px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: rgba(8, 13, 24, 0.96);
-    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.34);
-    backdrop-filter: blur(18px);
-  }
-
-  .nav-links.is-open {
-    display: grid;
-    gap: 8px;
+  .admin-access {
+    margin-right: auto;
   }
 
   .hero-copy {
@@ -262,19 +302,31 @@
   }
 
   .hero-actions a,
-  .hero-actions button,
-  .nav-links a,
-  .nav-links button {
+  .hero-actions button {
     width: 100%;
   }
 
-  .hero-stats {
-    grid-template-columns: 1fr;
+  .hero-stats span {
+    padding: 12px 8px;
+    border-right: 1px solid var(--line);
+    border-bottom: 0;
+    font-size: 0.72rem;
+    white-space: nowrap;
   }
 
-  .hero-stats span {
+  .hero-stats span:last-child {
     border-right: 0;
-    border-bottom: 1px solid var(--line);
+  }
+
+  .hero-stats strong {
+    font-size: 1.25rem;
+  }
+
+  .save-status {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    justify-content: center;
   }
 }
 
@@ -291,11 +343,7 @@
     font-size: 2.55rem;
   }
 
-  .hero-stats span {
-    padding: 14px;
-  }
-
   .hero-stats strong {
-    font-size: 1.55rem;
+    font-size: 1.05rem;
   }
 }

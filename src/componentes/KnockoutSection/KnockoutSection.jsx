@@ -32,7 +32,21 @@ function formatKickoff(kickoff) {
   }).format(date)
 }
 
-function KnockoutSection({ rounds, results }) {
+function toDatetimeLocalValue(kickoff) {
+  if (!kickoff) return ''
+
+  const date = new Date(kickoff)
+  if (Number.isNaN(date.getTime())) return ''
+
+  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+  return offsetDate.toISOString().slice(0, 16)
+}
+
+function fromDatetimeLocalValue(value) {
+  return value ? new Date(value).toISOString() : null
+}
+
+function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDelete }) {
   return (
     <section className="section knockout-section" id="eliminatorias">
       <div className="section-heading">
@@ -49,25 +63,91 @@ function KnockoutSection({ rounds, results }) {
                 const finished = hasResult(result)
                 const penalties = hasPenalties(result)
                 const kickoff = formatKickoff(result?.kickoff)
+                const isDraw =
+                  result?.homeGoals !== undefined &&
+                  result?.awayGoals !== undefined &&
+                  result.homeGoals !== '' &&
+                  result.awayGoals !== '' &&
+                  Number(result.homeGoals) === Number(result.awayGoals)
 
                 return (
                   <div className={`match-slot knockout-slot ${match.winner ? 'has-winner' : ''}`} key={match.id}>
-                    <span>{match.id || `Partido ${index + 1}`}</span>
-                    {kickoff && <time className="knockout-kickoff" dateTime={result.kickoff}>{kickoff}</time>}
+                    <div className="knockout-meta">
+                      <span>{match.id || `Partido ${index + 1}`}</span>
+                      {isAdmin ? (
+                        <input
+                          className="knockout-date-input"
+                          type="datetime-local"
+                          value={toDatetimeLocalValue(result?.kickoff)}
+                          onChange={(event) => onResultChange(match.id, { kickoff: fromDatetimeLocalValue(event.target.value) })}
+                        />
+                      ) : (
+                        kickoff && <time className="knockout-kickoff" dateTime={result.kickoff}>{kickoff}</time>
+                      )}
+                    </div>
                     <div className="knockout-team-line">
                       <strong>{match.homeLabel}</strong>
-                      <em>{finished ? result.homeGoals : '-'}</em>
+                      {isAdmin ? (
+                        <input
+                          aria-label={`Goles de ${match.homeLabel}`}
+                          min="0"
+                          type="number"
+                          value={result?.homeGoals ?? ''}
+                          onChange={(event) =>
+                            onResultChange(match.id, { homeGoals: event.target.value, awayGoals: result?.awayGoals ?? '' })
+                          }
+                        />
+                      ) : (
+                        <em>{finished ? result.homeGoals : '-'}</em>
+                      )}
                     </div>
                     <div className="knockout-team-line">
                       <strong>{match.awayLabel}</strong>
-                      <em>{finished ? result.awayGoals : '-'}</em>
+                      {isAdmin ? (
+                        <input
+                          aria-label={`Goles de ${match.awayLabel}`}
+                          min="0"
+                          type="number"
+                          value={result?.awayGoals ?? ''}
+                          onChange={(event) =>
+                            onResultChange(match.id, { homeGoals: result?.homeGoals ?? '', awayGoals: event.target.value })
+                          }
+                        />
+                      ) : (
+                        <em>{finished ? result.awayGoals : '-'}</em>
+                      )}
                     </div>
-                    {penalties && (
+                    {isAdmin && isDraw && (
+                      <div className="knockout-penalty-editor">
+                        <span>Penales</span>
+                        <input
+                          aria-label={`Penales de ${match.homeLabel}`}
+                          min="0"
+                          type="number"
+                          value={result?.homePenalties ?? ''}
+                          onChange={(event) => onResultChange(match.id, { homePenalties: event.target.value })}
+                        />
+                        <strong>-</strong>
+                        <input
+                          aria-label={`Penales de ${match.awayLabel}`}
+                          min="0"
+                          type="number"
+                          value={result?.awayPenalties ?? ''}
+                          onChange={(event) => onResultChange(match.id, { awayPenalties: event.target.value })}
+                        />
+                      </div>
+                    )}
+                    {!isAdmin && penalties && (
                       <div className="penalty-line">
                         Penales: <strong>{result.homePenalties}</strong> - <strong>{result.awayPenalties}</strong>
                       </div>
                     )}
                     <small>{match.winner ? `Avanza: ${match.winner}` : 'Pendiente'}</small>
+                    {isAdmin && (
+                      <button className="knockout-clear" type="button" onClick={() => onResultDelete(match.id)}>
+                        Limpiar
+                      </button>
+                    )}
                   </div>
                 )
               })}

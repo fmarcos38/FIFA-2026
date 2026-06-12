@@ -56,6 +56,11 @@
   gap: 8px;
 }
 
+.knockout-meta {
+  display: grid;
+  gap: 6px;
+}
+
 .knockout-slot.has-winner {
   border-color: rgba(0, 255, 178, 0.42);
   background: rgba(0, 255, 178, 0.055);
@@ -85,6 +90,64 @@
   font-style: normal;
   font-weight: 900;
   text-align: right;
+}
+
+.knockout-team-line input,
+.knockout-penalty-editor input {
+  width: 34px;
+  height: 30px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--text-strong);
+  background: rgba(0, 0, 0, 0.28);
+  font: inherit;
+  font-weight: 850;
+  text-align: center;
+}
+
+.knockout-date-input {
+  width: 100%;
+  min-height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text-strong);
+  background: rgba(0, 0, 0, 0.24);
+  font: inherit;
+  font-size: 0.72rem;
+  padding: 0 8px;
+}
+
+.knockout-penalty-editor {
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 34px auto 34px;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.knockout-penalty-editor strong {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.knockout-clear {
+  min-height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.knockout-clear:hover {
+  border-color: var(--pink);
+  color: var(--text-strong);
 }
 
 .knockout-slot small {

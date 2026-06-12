@@ -1,11 +1,18 @@
-import { useState } from 'react'
+import LoginIcon from '@mui/icons-material/Login'
+import LogoutIcon from '@mui/icons-material/Logout'
 import PopUpPartidosDeHoy from '../PopUpPartidosDeHoy/PopUpPartidosDeHoy'
 import './styles.css'
 
-function Hero({ isAdmin, onAdminClick, onLogout, partidosDeHoy, partidosHoy, todayMatches, onClosePartidosHoy }) {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const closeMenu = () => setMenuOpen(false)
-
+function Hero({
+  isAdmin,
+  onAdminClick,
+  onLogout,
+  partidosDeHoy,
+  partidosHoy,
+  todayMatches,
+  onClosePartidosHoy,
+  saveStatus,
+}) {
   return (
     <section className="hero-section" id="inicio">
       <div className="hero-media" aria-hidden="true">
@@ -13,48 +20,20 @@ function Hero({ isAdmin, onAdminClick, onLogout, partidosDeHoy, partidosHoy, tod
         <div className="pitch-lines"></div>
       </div>
       <div className="hero-content">
-        <nav className="topbar" aria-label="Navegacion principal">
-          <span className="brand-mark">FWC26</span>
-
+        <div className='cont-login'>
+          <div className="admin-access">
+          {isAdmin && <span className="admin-live-badge">Admin activo</span>}
           <button
-            className="menu-toggle"
+            className={`admin-door-button ${isAdmin ? 'is-logout' : ''}`}
             type="button"
-            onClick={() => setMenuOpen((currentState) => !currentState)}
-            aria-expanded={menuOpen}
-            aria-controls="hero-navigation"
-            aria-label="Abrir menu"
+            onClick={isAdmin ? onLogout : onAdminClick}
+            aria-label={isAdmin ? 'Salir del modo admin' : 'Ingresar al modo admin'}
+            title={isAdmin ? 'Salir' : 'Admin'}
           >
-            <span></span>
-            <span></span>
-            <span></span>
+            {isAdmin ? <LogoutIcon fontSize="small icono-log" /> : <LoginIcon fontSize="small" />}
           </button>
-
-          <div className={`nav-links ${menuOpen ? 'is-open' : ''}`} id="hero-navigation">
-            <a href="#grupos" onClick={closeMenu}>Grupos</a>
-            <a href="#eliminatorias" onClick={closeMenu}>Eliminatorias</a>
-            {isAdmin ? (
-              <button
-                type="button"
-                onClick={() => {
-                  onLogout()
-                  closeMenu()
-                }}
-              >
-                Salir
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  onAdminClick()
-                  closeMenu()
-                }}
-              >
-                Admin
-              </button>
-            )}
-          </div>
-        </nav>
+        </div>
+        </div>
 
         <div className="hero-copy">
           <div>
@@ -76,6 +55,11 @@ function Hero({ isAdmin, onAdminClick, onLogout, partidosDeHoy, partidosHoy, tod
           <span><strong>12</strong> grupos</span>
           <span><strong>104</strong> partidos</span>
         </div>
+        {isAdmin && saveStatus?.text && (
+          <div className={`save-status ${saveStatus.type}`} role="status">
+            {saveStatus.text}
+          </div>
+        )}
       </div>
       <PopUpPartidosDeHoy open={partidosHoy} matches={todayMatches} onClose={onClosePartidosHoy} />
     </section>
