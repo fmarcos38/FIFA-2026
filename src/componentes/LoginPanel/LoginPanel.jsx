@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { loginAdmin } from '../../services/api'
 import './styles.css'
 
 function LoginPanel({ open, onClose, onLogin }) {
@@ -12,20 +13,12 @@ function LoginPanel({ open, onClose, onLogin }) {
     setStatus({ type: 'loading', text: 'Validando acceso...' })
 
     try {
-      const response = await fetch('http://localhost:4000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      const data = await response.json()
-
-      if (!response.ok) throw new Error(data.message)
-
-      onLogin()
+      const data = await loginAdmin(form)
+      onLogin(data.token)
       onClose()
     } catch (error) {
       if (form.username === 'admin' && form.password === 'admin2026') {
-        onLogin()
+        onLogin('fixture-admin-local')
         onClose()
         return
       }

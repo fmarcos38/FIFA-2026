@@ -5,16 +5,17 @@ import Hero from './componentes/Hero/Hero'
 import KnockoutSection from './componentes/KnockoutSection/KnockoutSection'
 import LoginPanel from './componentes/LoginPanel/LoginPanel'
 import { buildKnockoutBracket, calculateGroupStandings, countries, createGroupMatches, groups, knockoutRounds } from './data/worldCupData'
+import { clearAdminToken, deleteResult, getApiBaseUrl, getResults, saveResult, setAdminToken } from './services/api'
 import './App.css'
 
 const RESULTS_STORAGE_KEY = 'fifa-2026-results'
-const API_BASE_URL = 'http://localhost:4000'
+const ADMIN_STORAGE_KEY = 'fifa-2026-admin'
 
 function App() {
   const [selectedCountry, setSelectedCountry] = useState(null)
   const [loginOpen, setLoginOpen] = useState(false)
   const [partidosHoy, setPartidosHoy] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem(ADMIN_STORAGE_KEY) === 'true')
   const [results, setResults] = useState(() => {
     const savedResults = localStorage.getItem(RESULTS_STORAGE_KEY)
 
@@ -27,11 +28,12 @@ function App() {
 
   useEffect(() => {
     async function loadResults() {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/results`)
-        const data = await response.json()
+      if (!getApiBaseUrl()) return
 
-        if (response.ok && data.results) {
+      try {
+        const data = await getResults()
+
+        if (data.results) {
           setResults(data.results)
         }
       } catch (error) {
@@ -40,6 +42,8 @@ function App() {
     }
 
     loadResults()
+    if (!getApiBaseUrl()) return undefined
+
     const intervalId = setInterval(loadResults, 60 * 1000)
 
     return () => clearInterval(intervalId)
@@ -92,15 +96,12 @@ function App() {
 
     if (hasPartialScore) return
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/results/${encodeURIComponent(matchId)}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(result),
-      })
-      const data = await response.json()
+    if (!getApiBaseUrl()) return
 
-      if (response.ok && data.results) {
+    try {
+      const data = await saveResult(matchId, result)
+
+      if (data.results) {
         setResults(data.results)
       }
     } catch (error) {
@@ -115,13 +116,12 @@ function App() {
       return nextResults
     })
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/results/${encodeURIComponent(matchId)}`, {
-        method: 'DELETE',
-      })
-      const data = await response.json()
+    if (!getApiBaseUrl()) return
 
-      if (response.ok && data.results) {
+    try {
+      const data = await deleteResult(matchId)
+
+      if (data.results) {
         setResults(data.results)
       }
     } catch (error) {
@@ -134,7 +134,11 @@ function App() {
       <Hero 
         isAdmin={isAdmin} 
         onAdminClick={() => setLoginOpen(true)} 
-        onLogout={() => setIsAdmin(false)} 
+        onLogout={() => {
+          localStorage.removeItem(ADMIN_STORAGE_KEY)
+          clearAdminToken()
+          setIsAdmin(false)
+        }} 
         partidosDeHoy={() => setPartidosHoy(true)}
         partidosHoy={partidosHoy}
         todayMatches={todayMatches}
@@ -166,7 +170,15 @@ function App() {
         name={selectedCountry}
         onClose={() => setSelectedCountry(null)}
       />
-      <LoginPanel open={loginOpen} onClose={() => setLoginOpen(false)} onLogin={() => setIsAdmin(true)} />
+      <LoginPanel
+        open={loginOpen}
+        onClose={() => setLoginOpen(false)}
+        onLogin={(token) => {
+          localStorage.setItem(ADMIN_STORAGE_KEY, 'true')
+          setAdminToken(token)
+          setIsAdmin(true)
+        }}
+      />
     </>
   )
 }
