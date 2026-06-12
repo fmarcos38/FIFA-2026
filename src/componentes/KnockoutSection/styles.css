@@ -1,0 +1,123 @@
+.knockout-section {
+  padding-top: 20px;
+}
+
+.rounds-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(230px, 1fr));
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+.round-card {
+  min-width: 230px;
+  padding: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(8, 13, 24, 0.74);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.round-card h3 {
+  margin: 0 0 12px;
+  color: var(--text-strong);
+  font-size: 1rem;
+  font-weight: 850;
+}
+
+.slot-list {
+  display: grid;
+  gap: 8px;
+}
+
+.match-slot {
+  min-height: 52px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 6px;
+  padding: 9px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.match-slot span {
+  color: var(--muted);
+}
+
+.match-slot strong {
+  display: block;
+  color: var(--text-strong);
+  font-size: 0.9rem;
+}
+
+.knockout-slot {
+  display: grid;
+  gap: 8px;
+}
+
+.knockout-slot.has-winner {
+  border-color: rgba(0, 255, 178, 0.42);
+  background: rgba(0, 255, 178, 0.055);
+}
+
+.knockout-team-line {
+  min-height: 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.knockout-team-line strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.knockout-team-line em {
+  color: var(--fluo);
+  font-style: normal;
+  font-weight: 900;
+  text-align: right;
+}
+
+.knockout-slot small {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.knockout-kickoff {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.penalty-line {
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.penalty-line strong {
+  display: inline;
+  color: var(--fluo);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 920px) {
+  .rounds-grid {
+    grid-template-columns: repeat(5, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .rounds-grid {
+    grid-template-columns: repeat(5, minmax(210px, 1fr));
+  }
+}

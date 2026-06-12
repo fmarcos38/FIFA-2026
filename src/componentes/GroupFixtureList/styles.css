@@ -1,0 +1,233 @@
+.group-fixtures {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(8, 13, 24, 0.58);
+  overflow: hidden;
+}
+
+.fixtures-heading {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fixtures-heading small {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.fixtures-heading span {
+  color: var(--text-strong);
+  font-size: 0.82rem;
+  font-weight: 550;
+}
+
+.fixture-list {
+  display: grid;
+}
+
+.fixture-row {
+  min-height: 52px;
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr) 76px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fixture-row:last-child {
+  border-bottom: 0;
+}
+
+.fixture-row.is-finished {
+  background: rgba(0, 255, 178, 0.035);
+}
+
+.fixture-kickoff {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.fixture-date-input {
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text-strong);
+  background: rgba(0, 0, 0, 0.24);
+  font: inherit;
+  font-size: 0.72rem;
+  padding: 0 8px;
+}
+
+.fixture-team {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  color: var(--text-strong);
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.fixture-team.away {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.fixture-team span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fixture-team:hover {
+  color: var(--fluo);
+}
+
+.fixture-team img {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.fixture-score {
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  justify-items: center;
+  gap: 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.82rem;
+}
+
+.fixture-score strong {
+  color: var(--text-strong);
+  font-size: 0.98rem;
+}
+
+.pending-score {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.inline-score-editor {
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: 34px auto 34px;
+  align-items: center;
+  justify-items: center;
+  gap: 5px;
+}
+
+.inline-score-editor input {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--text-strong);
+  background: rgba(0, 0, 0, 0.28);
+  font: inherit;
+  font-weight: 850;
+  text-align: center;
+}
+
+.inline-clear {
+  min-height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.inline-clear:hover {
+  border-color: var(--pink);
+  color: var(--text-strong);
+}
+
+@media (max-width: 1180px) {
+  .fixture-row {
+    grid-template-columns: 116px minmax(0, 1fr) 66px minmax(0, 1fr) auto;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .fixture-team {
+    font-size: 0.76rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .fixture-row {
+    grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr);
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .fixture-kickoff,
+  .fixture-date-input,
+  .inline-clear {
+    grid-column: 1 / -1;
+  }
+
+  .fixture-team {
+    font-size: 0.76rem;
+  }
+
+  .fixture-team img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 420px) {
+  .fixtures-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 10px 14px;
+  }
+
+  .fixture-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fixture-team,
+  .fixture-team.away {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .fixture-team.away {
+    flex-direction: row-reverse;
+  }
+
+  .fixture-score,
+  .inline-score-editor {
+    width: 86px;
+    justify-self: start;
+  }
+}

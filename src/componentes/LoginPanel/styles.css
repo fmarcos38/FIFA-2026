@@ -1,0 +1,88 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(2, 5, 10, 0.78);
+}
+
+.login-panel {
+  position: relative;
+  width: min(560px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(8, 13, 24, 0.74);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--text-strong);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.login-panel h2 {
+  margin: 8px 0 14px;
+  color: var(--text-strong);
+  font-size: 2rem;
+}
+
+.login-panel label {
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.login-panel input {
+  min-height: 42px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  padding: 0 11px;
+  color: var(--text-strong);
+  background: rgba(0, 0, 0, 0.22);
+  font: inherit;
+}
+
+.login-submit {
+  width: 100%;
+}
+
+.login-status {
+  color: var(--muted);
+}
+
+.login-status.success {
+  color: var(--fluo);
+}
+
+.login-status.error {
+  color: var(--pink);
+}
+
+@media (max-width: 640px) {
+  .login-panel {
+    padding: 22px 16px;
+  }
+
+  .login-panel h2 {
+    font-size: 1.65rem;
+  }
+}

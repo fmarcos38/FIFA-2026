@@ -1,0 +1,231 @@
+.admin-panel {
+  padding: 26px;
+}
+
+.admin-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.admin-header h2 {
+  margin: 8px 0 0;
+}
+
+.admin-sync-bar {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sync-status {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.sync-status.success {
+  color: var(--fluo);
+}
+
+.sync-status.error {
+  color: var(--pink);
+}
+
+.admin-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-section-heading {
+  margin: 26px 0 14px;
+}
+
+.admin-section-heading h3 {
+  margin: 6px 0 0;
+  color: var(--text-strong);
+  font-size: 1.35rem;
+}
+
+.admin-knockout-rounds {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-group {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.admin-group h3 {
+  margin: 0;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text-strong);
+  font-size: 0.98rem;
+  font-weight: 550;
+}
+
+.admin-match-list {
+  display: grid;
+}
+
+.admin-match {
+  min-height: 54px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 52px 14px 52px minmax(0, 1fr) 70px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-match:last-child {
+  border-bottom: 0;
+}
+
+.admin-knockout-match {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-knockout-match:last-child {
+  border-bottom: 0;
+}
+
+.admin-knockout-match .admin-match {
+  border-bottom: 0;
+}
+
+.admin-team {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-strong);
+  font-size: 0.82rem;
+}
+
+.admin-team.away {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.admin-team.text-only {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-team img {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.admin-match input {
+  width: 52px;
+  height: 38px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--text-strong);
+  background: rgba(0, 0, 0, 0.28);
+  font: inherit;
+  font-weight: 800;
+  text-align: center;
+}
+
+.admin-penalties {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 52px 14px 52px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 94px 10px 12px;
+}
+
+.admin-penalties span:first-child {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.admin-penalties input {
+  width: 52px;
+  height: 34px;
+  border: 1px solid rgba(0, 255, 178, 0.35);
+  border-radius: 6px;
+  color: var(--text-strong);
+  background: rgba(0, 255, 178, 0.07);
+  font: inherit;
+  font-weight: 800;
+  text-align: center;
+}
+
+.match-separator {
+  color: var(--muted);
+  text-align: center;
+}
+
+.clear-result {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.clear-result:hover {
+  border-color: var(--pink);
+  color: var(--text-strong);
+}
+
+@media (max-width: 920px) {
+  .admin-groups {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sync-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-match {
+    grid-template-columns: 1fr 44px 10px 44px 1fr;
+    padding: 8px;
+  }
+
+  .clear-result {
+    grid-column: 1 / -1;
+  }
+
+  .admin-match input {
+    width: 44px;
+  }
+
+  .admin-penalties {
+    grid-template-columns: 1fr 44px 10px 44px;
+    padding: 0 8px 10px;
+  }
+
+  .admin-penalties input {
+    width: 44px;
+  }
+}

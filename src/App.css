@@ -1,0 +1,119 @@
+.eyebrow {
+  color: var(--fluo);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.primary-action,
+.ghost-action {
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  background: transparent;
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.primary-action {
+  background: var(--fluo);
+  color: #04120d;
+  border-color: var(--fluo);
+  font-weight: 850;
+  box-shadow: 0 0 28px rgba(0, 255, 178, 0.28);
+}
+
+.ghost-action {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.ghost-action:hover {
+  border-color: var(--line-strong);
+  color: var(--text-strong);
+}
+
+.section {
+  width: min(1380px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 74px 0;
+}
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.section-heading h2 {
+  margin: 6px 0 0;
+  color: var(--text-strong);
+  font-size: 4rem;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.site-footer {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 24px 0 40px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 1180px) {
+  .section {
+    width: min(100% - 28px, 1040px);
+  }
+
+  .section-heading h2 {
+    font-size: 3.3rem;
+  }
+}
+
+@media (max-width: 920px) {
+  .section {
+    padding: 56px 0;
+  }
+
+  .section-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .section-heading h2 {
+    font-size: 2.8rem;
+  }
+
+  .site-footer {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    width: min(100% - 20px, 100%);
+    padding: 44px 0;
+  }
+
+  .section-heading h2 {
+    font-size: 2.15rem;
+  }
+
+  .site-footer {
+    width: min(100% - 20px, 100%);
+  }
+}
