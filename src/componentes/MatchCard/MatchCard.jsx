@@ -1,19 +1,12 @@
-import { getFlagUrl } from '../../data/worldCupData'
+import { getFlagUrl, getMatchStatus, getMatchStatusLabel, hasMatchScore } from '../../data/worldCupData'
 import { formatKickoffParts } from '../../helpers/dateTime'
 import './styles.css'
 
-function hasResult(result) {
-  return (
-    result?.homeGoals !== undefined &&
-    result?.awayGoals !== undefined &&
-    result.homeGoals !== '' &&
-    result.awayGoals !== ''
-  )
-}
-
 function MatchCard({ match, result = {}, className = '' }) {
   const kickoff = result.kickoff || match.kickoff
-  const finished = hasResult(result)
+  const hasScore = hasMatchScore(result)
+  const status = getMatchStatus(result, kickoff)
+  const statusLabel = getMatchStatusLabel(result, kickoff)
   const formattedKickoff = formatKickoffParts(kickoff)
 
   return (
@@ -30,7 +23,7 @@ function MatchCard({ match, result = {}, className = '' }) {
         </span>
 
         <strong className="match-card-score">
-          {finished ? `${result.homeGoals} - ${result.awayGoals}` : 'vs'}
+          {hasScore ? `${result.homeGoals} - ${result.awayGoals}` : 'vs'}
         </strong>
 
         <span className="match-card-team away">
@@ -39,7 +32,10 @@ function MatchCard({ match, result = {}, className = '' }) {
         </span>
       </div>
 
-      <small className="match-card-group">{match.groupName}</small>
+      <small className="match-card-group">
+        <span>{match.groupName}</span>
+        {statusLabel && <span className={`match-status status-${status}`}>{statusLabel}</span>}
+      </small>
     </article>
   )
 }

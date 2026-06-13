@@ -135,6 +135,52 @@ export function buildInitialStandings(teams) {
   }))
 }
 
+export function hasMatchScore(result) {
+  const homeGoals = Number(result?.homeGoals)
+  const awayGoals = Number(result?.awayGoals)
+
+  return (
+    result?.homeGoals !== undefined &&
+    result?.awayGoals !== undefined &&
+    result.homeGoals !== '' &&
+    result.awayGoals !== '' &&
+    Number.isInteger(homeGoals) &&
+    Number.isInteger(awayGoals)
+  )
+}
+
+export function isPartialResult(result, kickoff = result?.kickoff) {
+  return hasMatchScore(result) && getMatchStatus(result, kickoff) === 'partial'
+}
+
+export function hasMinimumMatchDurationElapsed(kickoff) {
+  if (!kickoff) return false
+
+  const kickoffDate = new Date(kickoff)
+  if (Number.isNaN(kickoffDate.getTime())) return false
+
+  return Date.now() >= kickoffDate.getTime() + 95 * 60 * 1000
+}
+
+export function getMatchStatus(result, kickoff = result?.kickoff) {
+  if (!hasMatchScore(result)) return ''
+  if (result.status === 'partial') return 'partial'
+  if (hasMinimumMatchDurationElapsed(kickoff)) return 'finished'
+  return 'partial'
+}
+
+export function isFinishedResult(result, kickoff = result?.kickoff) {
+  return getMatchStatus(result, kickoff) === 'finished'
+}
+
+export function getMatchStatusLabel(result, kickoff = result?.kickoff) {
+  const status = getMatchStatus(result, kickoff)
+
+  if (status === 'partial') return 'Parcial'
+  if (status === 'finished') return 'Finalizado'
+  return ''
+}
+
 export const groupMatchKickoffs = {
   'A-1': '2026-06-11T19:00:00.000Z',
   'A-2': '2026-06-12T02:00:00.000Z',
@@ -234,16 +280,10 @@ export function calculateGroupStandings(group, results) {
 
   createGroupMatches(group).forEach((match) => {
     const result = results[match.id]
-    const hasRawResult =
-      result?.homeGoals !== undefined &&
-      result?.awayGoals !== undefined &&
-      result.homeGoals !== '' &&
-      result.awayGoals !== ''
     const homeGoals = Number(result?.homeGoals)
     const awayGoals = Number(result?.awayGoals)
-    const hasResult = hasRawResult && Number.isInteger(homeGoals) && Number.isInteger(awayGoals)
 
-    if (!hasResult) return
+    if (!isFinishedResult(result, result?.kickoff || match.kickoff)) return
 
     const home = rowsByTeam[match.home]
     const away = rowsByTeam[match.away]
@@ -349,15 +389,6 @@ function findKnockoutMatch(matchId, rounds = knockoutRounds) {
   return flattenKnockoutMatches(rounds).find((match) => match.id === matchId)
 }
 
-function hasCompleteResult(result) {
-  return (
-    result?.homeGoals !== undefined &&
-    result?.awayGoals !== undefined &&
-    result.homeGoals !== '' &&
-    result.awayGoals !== ''
-  )
-}
-
 function resolveKnockoutParticipant(participant, results, rounds) {
   if (participant.seed) return participant.seed
 
@@ -370,7 +401,7 @@ function resolveKnockoutParticipant(participant, results, rounds) {
 export function getKnockoutWinner(match, results, rounds = knockoutRounds) {
   const result = results[match.id]
 
-  if (!hasCompleteResult(result)) return null
+  if (!isFinishedResult(result, result?.kickoff || match.kickoff)) return null
 
   const homeGoals = Number(result.homeGoals)
   const awayGoals = Number(result.awayGoals)

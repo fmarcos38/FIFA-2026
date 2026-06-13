@@ -32,7 +32,7 @@
 .fixture-row {
   min-height: 52px;
   display: grid;
-  grid-template-columns: 132px minmax(0, 1fr) 76px minmax(0, 1fr) auto;
+  grid-template-columns: 132px minmax(0, 1fr) 76px minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
@@ -43,8 +43,12 @@
   border-bottom: 0;
 }
 
-.fixture-row.is-finished {
+.fixture-row.has-score {
   background: rgba(0, 255, 178, 0.035);
+}
+
+.fixture-row.status-partial {
+  background: rgba(255, 209, 102, 0.045);
 }
 
 .fixture-kickoff {
@@ -163,6 +167,38 @@
   cursor: pointer;
 }
 
+.fixture-status,
+.fixture-status-select {
+  min-height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.fixture-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #07120f;
+  background: var(--fluo);
+  padding: 0 8px;
+}
+
+.fixture-status.status-partial {
+  color: #140b01;
+  background: #ffd166;
+}
+
+.fixture-status-select {
+  color: var(--text-strong);
+  background: rgba(0, 0, 0, 0.24);
+  padding: 0 7px;
+  cursor: pointer;
+}
+
 .inline-clear:hover {
   border-color: var(--pink);
   color: var(--text-strong);
@@ -170,7 +206,7 @@
 
 @media (max-width: 1180px) {
   .fixture-row {
-    grid-template-columns: 116px minmax(0, 1fr) 66px minmax(0, 1fr) auto;
+    grid-template-columns: 116px minmax(0, 1fr) 66px minmax(0, 1fr) auto auto;
     gap: 6px;
     padding: 8px;
   }
@@ -189,6 +225,8 @@
 
   .fixture-kickoff,
   .fixture-date-input,
+  .fixture-status,
+  .fixture-status-select,
   .inline-clear {
     grid-column: 1 / -1;
   }
@@ -218,6 +256,8 @@
 
   .fixture-kickoff,
   .fixture-date-input,
+  .fixture-status,
+  .fixture-status-select,
   .inline-clear {
     grid-column: 1 / -1;
   }

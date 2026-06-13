@@ -65,7 +65,7 @@ function GroupsSection({ groups, isAdmin, results, onResultChange, onResultDelet
                     <tr key={row.team}>
                       <td>
                         <button className="standing-team" type="button" onClick={() => onSelectCountry(row.team)}>
-                          <span className="position-badge">{index + 1}</span>
+                          <span className="standings-position">{index + 1}</span>
                           <span className="flag-button" aria-hidden="true">
                             <img src={getFlagUrl(row.team)} alt="" loading="lazy" />
                           </span>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import InstagramIcon from '@mui/icons-material/Instagram'
 import CountryModal from './componentes/CountryModal/CountryModal'
 import GroupsSection from './componentes/GroupsSection/GroupsSection'
 import Hero from './componentes/Hero/Hero'
@@ -12,6 +13,7 @@ import './App.css'
 
 const RESULTS_STORAGE_KEY = 'fifa-2026-results'
 const ADMIN_STORAGE_KEY = 'fifa-2026-admin'
+const INSTAGRAM_URL = 'https://www.instagram.com/fmarcos_casla/'
 
 function App() {
   const [selectedCountry, setSelectedCountry] = useState(null)
@@ -200,7 +202,10 @@ function App() {
       </main>
       <footer className="site-footer">
         <span>Fixture FIFA World Cup 2026</span>
-        <span>Datos editables desde la estructura modular del proyecto.</span>
+        <a className="footer-credit" href={INSTAGRAM_URL} target="_blank" rel="noreferrer" aria-label="Instagram de Marcos Forastiere">
+          <span>Desarrollado por Marcos Forastiere</span>
+          <InstagramIcon fontSize="small" />
+        </a>
       </footer>
       <CountryModal
         country={selectedCountry ? countries[selectedCountry] : null}

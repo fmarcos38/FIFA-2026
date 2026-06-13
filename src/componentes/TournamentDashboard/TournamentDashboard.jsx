@@ -1,16 +1,8 @@
 import { useMemo, useState } from 'react'
 import { addDays, formatDateKey } from '../../helpers/dateTime'
+import { isFinishedResult } from '../../data/worldCupData'
 import MatchCard from '../MatchCard/MatchCard'
 import './styles.css'
-
-function hasResult(result) {
-  return (
-    result?.homeGoals !== undefined &&
-    result?.awayGoals !== undefined &&
-    result.homeGoals !== '' &&
-    result.awayGoals !== ''
-  )
-}
 
 const filters = [
   { id: 'today', label: 'Hoy' },
@@ -21,7 +13,10 @@ const filters = [
 function TournamentDashboard({ matches, results }) {
   const [activeFilter, setActiveFilter] = useState('today')
   const stats = useMemo(() => {
-    const played = matches.filter((match) => hasResult(results[match.id])).length
+    const played = matches.filter((match) => {
+      const result = results[match.id]
+      return isFinishedResult(result, result?.kickoff || match.kickoff)
+    }).length
 
     return {
       played,

@@ -67,10 +67,23 @@
   margin: 0 auto;
   padding: 24px 0 40px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   color: var(--muted);
   border-top: 1px solid var(--line);
+}
+
+.footer-credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.footer-credit:hover {
+  color: var(--fluo);
 }
 
 @media (max-width: 1180px) {

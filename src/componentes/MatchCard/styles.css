@@ -18,6 +18,29 @@
   text-transform: uppercase;
 }
 
+.match-card-group {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+}
+
+.match-status {
+  min-height: 20px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 5px;
+  color: #07120f;
+  background: var(--fluo);
+  padding: 0 6px;
+  font-size: 0.62rem;
+  font-weight: 950;
+}
+
+.status-partial {
+  color: #140b01;
+  background: #ffd166;
+}
+
 .match-card-kickoff {
   display: flex;
   flex-wrap: wrap;

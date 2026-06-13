@@ -1,13 +1,19 @@
 import { formatKickoff, fromDatetimeLocalValue, toDatetimeLocalValue } from '../../helpers/dateTime'
+import { getMatchStatus, getMatchStatusLabel, hasMatchScore, hasMinimumMatchDurationElapsed } from '../../data/worldCupData'
 import './styles.css'
 
-function hasResult(result) {
-  return (
-    result?.homeGoals !== undefined &&
-    result?.awayGoals !== undefined &&
-    result.homeGoals !== '' &&
-    result.awayGoals !== ''
-  )
+function buildScoreChange(result, field, value) {
+  const otherField = field === 'homeGoals' ? 'awayGoals' : 'homeGoals'
+  const nextResult = {
+    [field]: value,
+    [otherField]: result?.[otherField] ?? '',
+  }
+
+  if (nextResult.homeGoals !== '' && nextResult.awayGoals !== '') {
+    nextResult.status = result?.status || 'partial'
+  }
+
+  return nextResult
 }
 
 function hasPenalties(result) {
@@ -33,7 +39,11 @@ function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDel
             <div className="slot-list">
               {round.matches.map((match, index) => {
                 const result = results[match.id]
-                const finished = hasResult(result)
+                const hasScore = hasMatchScore(result)
+                const rawKickoff = result?.kickoff || match.kickoff
+                const status = getMatchStatus(result, rawKickoff)
+                const statusLabel = getMatchStatusLabel(result, rawKickoff)
+                const canFinish = hasMinimumMatchDurationElapsed(rawKickoff)
                 const penalties = hasPenalties(result)
                 const kickoff = formatKickoff(result?.kickoff, '')
                 const isDraw =
@@ -67,11 +77,11 @@ function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDel
                           type="number"
                           value={result?.homeGoals ?? ''}
                           onChange={(event) =>
-                            onResultChange(match.id, { homeGoals: event.target.value, awayGoals: result?.awayGoals ?? '' })
+                            onResultChange(match.id, buildScoreChange(result, 'homeGoals', event.target.value))
                           }
                         />
                       ) : (
-                        <em>{finished ? result.homeGoals : '-'}</em>
+                        <em>{hasScore ? result.homeGoals : '-'}</em>
                       )}
                     </div>
                     <div className="knockout-team-line">
@@ -83,13 +93,25 @@ function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDel
                           type="number"
                           value={result?.awayGoals ?? ''}
                           onChange={(event) =>
-                            onResultChange(match.id, { homeGoals: result?.homeGoals ?? '', awayGoals: event.target.value })
+                            onResultChange(match.id, buildScoreChange(result, 'awayGoals', event.target.value))
                           }
                         />
                       ) : (
-                        <em>{finished ? result.awayGoals : '-'}</em>
+                        <em>{hasScore ? result.awayGoals : '-'}</em>
                       )}
                     </div>
+                    {isAdmin && hasScore && (
+                      <select
+                        className="knockout-status-select"
+                        aria-label={`Estado de ${match.homeLabel} contra ${match.awayLabel}`}
+                        value={status || 'partial'}
+                        onChange={(event) => onResultChange(match.id, { status: event.target.value })}
+                      >
+                        <option value="partial">Parcial</option>
+                        <option value="finished" disabled={!canFinish}>Finalizado</option>
+                      </select>
+                    )}
+                    {!isAdmin && statusLabel && <span className={`knockout-status status-${status}`}>{statusLabel}</span>}
                     {isAdmin && isDraw && (
                       <div className="knockout-penalty-editor">
                         <span>Penales</span>

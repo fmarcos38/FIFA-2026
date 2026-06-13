@@ -1,14 +1,25 @@
-import { createGroupMatches, getFlagUrl } from '../../data/worldCupData'
+import {
+  createGroupMatches,
+  getFlagUrl,
+  getMatchStatus,
+  getMatchStatusLabel,
+  hasMatchScore,
+  hasMinimumMatchDurationElapsed,
+} from '../../data/worldCupData'
 import { formatKickoff, fromDatetimeLocalValue, toDatetimeLocalValue } from '../../helpers/dateTime'
 import './styles.css'
 
-function hasResult(result) {
-  return (
-    result?.homeGoals !== undefined &&
-    result?.awayGoals !== undefined &&
-    result.homeGoals !== '' &&
-    result.awayGoals !== ''
-  )
+function buildScoreChange(result, field, value) {
+  const nextResult = {
+    [field]: value,
+    [field === 'homeGoals' ? 'awayGoals' : 'homeGoals']: result[field === 'homeGoals' ? 'awayGoals' : 'homeGoals'] ?? '',
+  }
+
+  if (nextResult.homeGoals !== '' && nextResult.awayGoals !== '') {
+    nextResult.status = result.status || 'partial'
+  }
+
+  return nextResult
 }
 
 function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDelete, onSelectCountry }) {
@@ -23,10 +34,13 @@ function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDel
         {createGroupMatches(group).map((match) => {
           const result = results[match.id] || {}
           const kickoff = result.kickoff || match.kickoff
-          const finished = hasResult(result)
+          const hasScore = hasMatchScore(result)
+          const status = getMatchStatus(result, kickoff)
+          const statusLabel = getMatchStatusLabel(result, kickoff)
+          const canFinish = hasMinimumMatchDurationElapsed(kickoff)
 
           return (
-            <article className={`fixture-row ${finished ? 'is-finished' : ''}`} key={match.id}>
+            <article className={`fixture-row ${hasScore ? 'has-score' : ''} status-${status || 'pending'}`} key={match.id}>
               {isAdmin ? (
                 <input
                   className="fixture-date-input"
@@ -52,7 +66,7 @@ function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDel
                     min="0"
                     type="number"
                     value={result.homeGoals ?? ''}
-                    onChange={(event) => onResultChange(match.id, { homeGoals: event.target.value, awayGoals: result.awayGoals ?? '' })}
+                    onChange={(event) => onResultChange(match.id, buildScoreChange(result, 'homeGoals', event.target.value))}
                   />
                   <span>-</span>
                   <input
@@ -60,12 +74,12 @@ function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDel
                     min="0"
                     type="number"
                     value={result.awayGoals ?? ''}
-                    onChange={(event) => onResultChange(match.id, { homeGoals: result.homeGoals ?? '', awayGoals: event.target.value })}
+                    onChange={(event) => onResultChange(match.id, buildScoreChange(result, 'awayGoals', event.target.value))}
                   />
                 </div>
               ) : (
-                <div className="fixture-score" aria-label={finished ? 'Resultado cargado' : 'Partido pendiente'}>
-                  {finished ? (
+                <div className="fixture-score" aria-label={hasScore ? 'Resultado cargado' : 'Partido pendiente'}>
+                  {hasScore ? (
                     <>
                       <strong>{result.homeGoals}</strong>
                       <span>-</span>
@@ -81,6 +95,20 @@ function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDel
                 <span>{match.away}</span>
                 <img src={getFlagUrl(match.away)} alt="" loading="lazy" />
               </button>
+
+              {isAdmin && hasScore && (
+                <select
+                  className="fixture-status-select"
+                  aria-label={`Estado de ${match.home} contra ${match.away}`}
+                  value={status || 'partial'}
+                  onChange={(event) => onResultChange(match.id, { status: event.target.value })}
+                >
+                  <option value="partial">Parcial</option>
+                  <option value="finished" disabled={!canFinish}>Finalizado</option>
+                </select>
+              )}
+
+              {!isAdmin && statusLabel && <span className={`fixture-status status-${status}`}>{statusLabel}</span>}
 
               {isAdmin && (
                 <button className="inline-clear" type="button" onClick={() => onResultDelete(match.id)}>
