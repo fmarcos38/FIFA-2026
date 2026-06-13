@@ -17,12 +17,6 @@ function LoginPanel({ open, onClose, onLogin }) {
       onLogin(data.token)
       onClose()
     } catch (error) {
-      if (form.username === 'admin' && form.password === 'admin2026') {
-        onLogin('fixture-admin-local')
-        onClose()
-        return
-      }
-
       setStatus({ type: 'error', text: error.message || 'No se pudo conectar con el back' })
     }
   }
