@@ -1,16 +1,7 @@
 import { useMemo, useState } from 'react'
-import { getFlagUrl } from '../../data/worldCupData'
+import { addDays, formatDateKey } from '../../helpers/dateTime'
+import MatchCard from '../MatchCard/MatchCard'
 import './styles.css'
-
-function formatDateKey(date) {
-  return new Intl.DateTimeFormat('en-CA').format(date)
-}
-
-function addDays(date, days) {
-  const nextDate = new Date(date)
-  nextDate.setDate(nextDate.getDate() + days)
-  return nextDate
-}
 
 function hasResult(result) {
   return (
@@ -19,17 +10,6 @@ function hasResult(result) {
     result.homeGoals !== '' &&
     result.awayGoals !== ''
   )
-}
-
-function formatKickoff(kickoff) {
-  const date = new Date(kickoff)
-
-  return new Intl.DateTimeFormat('es-AR', {
-    day: '2-digit',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date)
 }
 
 const filters = [
@@ -96,25 +76,9 @@ function TournamentDashboard({ matches, results }) {
           {filteredMatches.length > 0 ? (
             filteredMatches.slice(0, 8).map((match) => {
               const result = results[match.id] || {}
-              const kickoff = result.kickoff || match.kickoff
-              const finished = hasResult(result)
 
               return (
-                <article className="upcoming-match" key={match.id}>
-                  <time dateTime={kickoff}>{formatKickoff(kickoff)}</time>
-                  <div className="upcoming-teams">
-                    <span>
-                      <img src={getFlagUrl(match.home)} alt="" />
-                      {match.home}
-                    </span>
-                    <strong>{finished ? `${result.homeGoals} - ${result.awayGoals}` : 'vs'}</strong>
-                    <span className="away">
-                      {match.away}
-                      <img src={getFlagUrl(match.away)} alt="" />
-                    </span>
-                  </div>
-                  <small>{match.groupName}</small>
-                </article>
+                <MatchCard match={match} result={result} key={match.id} />
               )
             })
           ) : (

@@ -20,19 +20,19 @@ function Hero({
         <div className="pitch-lines"></div>
       </div>
       <div className="hero-content">
-        <div className='cont-login'>
+        <div className="cont-login">
           <div className="admin-access">
-          {isAdmin && <span className="admin-live-badge">Admin activo</span>}
-          <button
-            className={`admin-door-button ${isAdmin ? 'is-logout' : ''}`}
-            type="button"
-            onClick={isAdmin ? onLogout : onAdminClick}
-            aria-label={isAdmin ? 'Salir del modo admin' : 'Ingresar al modo admin'}
-            title={isAdmin ? 'Salir' : 'Admin'}
-          >
-            {isAdmin ? <LogoutIcon fontSize="small icono-log" /> : <LoginIcon fontSize="small" />}
-          </button>
-        </div>
+            {isAdmin && <span className="admin-live-badge">Admin activo</span>}
+            <button
+              className={`admin-door-button ${isAdmin ? 'is-logout' : ''}`}
+              type="button"
+              onClick={isAdmin ? onLogout : onAdminClick}
+              aria-label={isAdmin ? 'Salir del modo admin' : 'Ingresar al modo admin'}
+              title={isAdmin ? 'Salir' : 'Admin'}
+            >
+              {isAdmin ? <LogoutIcon className="icono-log" fontSize="small" /> : <LoginIcon className="icono-log" fontSize="small" />}
+            </button>
+          </div>
         </div>
 
         <div className="hero-copy">

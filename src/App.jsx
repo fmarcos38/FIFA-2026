@@ -6,6 +6,7 @@ import KnockoutSection from './componentes/KnockoutSection/KnockoutSection'
 import LoginPanel from './componentes/LoginPanel/LoginPanel'
 import TournamentDashboard from './componentes/TournamentDashboard/TournamentDashboard'
 import { buildKnockoutBracket, calculateGroupStandings, countries, createGroupMatches, groups, knockoutRounds } from './data/worldCupData'
+import { formatDateKey } from './helpers/dateTime'
 import { clearAdminToken, deleteResult, getApiBaseUrl, getResults, saveResult, setAdminToken } from './services/api'
 import './App.css'
 
@@ -77,7 +78,7 @@ function App() {
     [results],
   )
   const todayMatches = useMemo(() => {
-    const todayKey = new Intl.DateTimeFormat('en-CA').format(new Date())
+    const todayKey = formatDateKey(new Date())
 
     return groupMatches
       .map((match) => ({
@@ -87,7 +88,7 @@ function App() {
       .filter((match) => {
         if (!match.kickoff) return false
 
-        return new Intl.DateTimeFormat('en-CA').format(new Date(match.kickoff)) === todayKey
+        return formatDateKey(new Date(match.kickoff)) === todayKey
       })
   }, [groupMatches, results])
 

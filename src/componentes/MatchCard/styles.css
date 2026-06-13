@@ -1,0 +1,123 @@
+.match-card {
+  min-height: 52px;
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr) 86px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.match-card-kickoff,
+.match-card-group {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.match-card-kickoff {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.match-card-teams {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.match-card-team {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-strong);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.match-card-team.away {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.match-card-team span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.match-card-team img {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.match-card-score {
+  color: var(--fluo);
+  text-align: center;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 760px) {
+  .match-card {
+    grid-template-columns: 74px minmax(0, 1fr) 58px;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .match-card-kickoff {
+    align-content: center;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .match-card-teams {
+    grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  .match-card-team {
+    gap: 5px;
+    font-size: 0.76rem;
+  }
+
+  .match-card-team img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .match-card-score {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .match-card {
+    grid-template-columns: 58px minmax(0, 1fr) 44px;
+  }
+
+  .match-card-kickoff,
+  .match-card-group,
+  .match-card-team,
+  .match-card-score {
+    font-size: 0.68rem;
+  }
+
+  .match-card-teams {
+    grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
+  }
+
+  .match-card-team img {
+    width: 18px;
+    height: 18px;
+  }
+}

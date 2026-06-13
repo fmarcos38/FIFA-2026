@@ -212,22 +212,53 @@
   }
 
   .fixture-row {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr);
+    align-items: center;
   }
 
-  .fixture-team,
-  .fixture-team.away {
+  .fixture-kickoff,
+  .fixture-date-input,
+  .inline-clear {
+    grid-column: 1 / -1;
+  }
+
+  .fixture-team {
     justify-content: flex-start;
-    text-align: left;
+    min-width: 0;
   }
 
   .fixture-team.away {
-    flex-direction: row-reverse;
+    justify-content: flex-end;
+    text-align: right;
+    flex-direction: row;
   }
 
   .fixture-score,
   .inline-score-editor {
-    width: 86px;
-    justify-self: start;
+    width: 46px;
+    justify-self: center;
+    min-height: 30px;
+    font-size: 0.72rem;
+  }
+
+  .fixture-team span {
+    max-width: 100%;
+    font-size: 0.72rem;
+  }
+
+  .fixture-team img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .inline-score-editor {
+    grid-template-columns: 20px 6px 20px;
+    gap: 2px;
+  }
+
+  .inline-score-editor input {
+    width: 20px;
+    height: 28px;
+    font-size: 0.72rem;
   }
 }

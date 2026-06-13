@@ -101,23 +101,22 @@
   place-items: center;
   border: none;
   border-radius: 6px;
-  background-color: transparent;
+  color: rgba(0, 0, 0, 0.68);
+  background: transparent;
   font: inherit;
   cursor: pointer;
 }
 
 .icono-log{
-  color: var(--text-strong);
+  color: currentColor;
 }
 
 .admin-door-button:hover {
-  border-color: var(--fluo);
-  color: var(--fluo);
+  color: rgba(0, 0, 0, 0.9);
 }
 
 .admin-door-button.is-logout:hover {
-  border-color: var(--pink);
-  color: var(--pink);
+  color: rgba(0, 0, 0, 0.9);
 }
 
 .ghost-action,
@@ -285,7 +284,7 @@
   }
 
   .admin-access {
-    margin-right: auto;
+    margin-left: auto;
   }
 
   .hero-copy {

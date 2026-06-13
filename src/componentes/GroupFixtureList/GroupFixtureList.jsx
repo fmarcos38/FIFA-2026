@@ -1,4 +1,5 @@
 import { createGroupMatches, getFlagUrl } from '../../data/worldCupData'
+import { formatKickoff, fromDatetimeLocalValue, toDatetimeLocalValue } from '../../helpers/dateTime'
 import './styles.css'
 
 function hasResult(result) {
@@ -8,34 +9,6 @@ function hasResult(result) {
     result.homeGoals !== '' &&
     result.awayGoals !== ''
   )
-}
-
-function formatKickoff(kickoff) {
-  if (!kickoff) return 'Fecha y hora a confirmar'
-
-  const date = new Date(kickoff)
-  if (Number.isNaN(date.getTime())) return 'Fecha y hora a confirmar'
-
-  return new Intl.DateTimeFormat('es-AR', {
-    day: '2-digit',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date)
-}
-
-function toDatetimeLocalValue(kickoff) {
-  if (!kickoff) return ''
-
-  const date = new Date(kickoff)
-  if (Number.isNaN(date.getTime())) return ''
-
-  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-  return offsetDate.toISOString().slice(0, 16)
-}
-
-function fromDatetimeLocalValue(value) {
-  return value ? new Date(value).toISOString() : null
 }
 
 function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDelete, onSelectCountry }) {

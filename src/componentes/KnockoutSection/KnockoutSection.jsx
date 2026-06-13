@@ -1,3 +1,4 @@
+import { formatKickoff, fromDatetimeLocalValue, toDatetimeLocalValue } from '../../helpers/dateTime'
 import './styles.css'
 
 function hasResult(result) {
@@ -18,34 +19,6 @@ function hasPenalties(result) {
   )
 }
 
-function formatKickoff(kickoff) {
-  if (!kickoff) return null
-
-  const date = new Date(kickoff)
-  if (Number.isNaN(date.getTime())) return null
-
-  return new Intl.DateTimeFormat('es-AR', {
-    day: '2-digit',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date)
-}
-
-function toDatetimeLocalValue(kickoff) {
-  if (!kickoff) return ''
-
-  const date = new Date(kickoff)
-  if (Number.isNaN(date.getTime())) return ''
-
-  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-  return offsetDate.toISOString().slice(0, 16)
-}
-
-function fromDatetimeLocalValue(value) {
-  return value ? new Date(value).toISOString() : null
-}
-
 function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDelete }) {
   return (
     <section className="section knockout-section" id="eliminatorias">
@@ -62,7 +35,7 @@ function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDel
                 const result = results[match.id]
                 const finished = hasResult(result)
                 const penalties = hasPenalties(result)
-                const kickoff = formatKickoff(result?.kickoff)
+                const kickoff = formatKickoff(result?.kickoff, '')
                 const isDraw =
                   result?.homeGoals !== undefined &&
                   result?.awayGoals !== undefined &&
