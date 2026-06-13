@@ -947,7 +947,7 @@ export const countrySquads = {
       "goals": 4
     }
   ],
-  "Bosnia and Herzegovina": [
+  "Bosnia": [
     {
       "no": 1,
       "name": "Nikola Vasilj",

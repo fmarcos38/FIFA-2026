@@ -9,6 +9,16 @@ const positionSections = [
   { id: 'DEL', label: 'DEL', title: 'Delanteros' },
 ]
 
+const worldCupTitles = {
+  Argentina: 3,
+  Brazil: 5,
+  England: 1,
+  France: 2,
+  Germany: 4,
+  Spain: 1,
+  Uruguay: 2,
+}
+
 function buildFallbackSquad(players = []) {
   return players.map((name, index) => ({
     no: index + 1,
@@ -35,6 +45,7 @@ function CountryModal({ country, name, onClose }) {
   if (!country) return null
   const squad = countrySquads[name] || buildFallbackSquad(country.players)
   const groupedSquad = groupSquad(squad)
+  const titles = worldCupTitles[name] || 0
 
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
@@ -64,7 +75,7 @@ function CountryModal({ country, name, onClose }) {
                 DT <strong>{country.coach}</strong>
               </span>
               <span>
-                Plantel <strong>{squad.length} jugadores</strong>
+                Mundiales <strong>{titles} ganados</strong>
               </span>
             </div>
           </div>

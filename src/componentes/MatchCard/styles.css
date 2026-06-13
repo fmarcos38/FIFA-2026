@@ -22,18 +22,20 @@
   display: grid;
   justify-items: start;
   gap: 4px;
+  white-space: nowrap;
 }
 
 .match-status {
-  min-height: 20px;
+  min-height: 16px;
   display: inline-flex;
   align-items: center;
   border-radius: 5px;
-  color: #07120f;
+  color: #120707;
   background: var(--fluo);
-  padding: 0 6px;
+  padding: 1px 5px;
   font-size: 0.62rem;
   font-weight: 950;
+  line-height: 1;
 }
 
 .status-partial {
@@ -92,9 +94,14 @@
 
 @media (max-width: 760px) {
   .match-card {
-    grid-template-columns: 74px minmax(0, 1fr) 58px;
-    gap: 8px;
+    grid-template-columns: 46px minmax(0, 1fr) 54px;
+    gap: 6px;
     padding: 8px;
+  }
+
+  .match-card-kickoff,
+  .match-card-group {
+    font-size: 0.64rem;
   }
 
   .match-card-kickoff {
@@ -125,14 +132,15 @@
 
 @media (max-width: 420px) {
   .match-card {
-    grid-template-columns: 58px minmax(0, 1fr) 44px;
+    grid-template-columns: 38px minmax(0, 1fr) 54px;
+    gap: 5px;
   }
 
   .match-card-kickoff,
   .match-card-group,
   .match-card-team,
   .match-card-score {
-    font-size: 0.68rem;
+    font-size: 0.6rem;
   }
 
   .match-card-teams {
@@ -142,5 +150,12 @@
   .match-card-team img {
     width: 18px;
     height: 18px;
+  }
+
+  .match-status {
+    min-height: 14px;
+    padding: 1px 3px;
+    font-size: 8px;
+    font-weight: 500;
   }
 }

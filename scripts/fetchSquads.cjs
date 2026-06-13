@@ -5,6 +5,7 @@ const SOURCE_URL = 'https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads'
 const OUTPUT_PATH = path.join(__dirname, '..', 'src', 'data', 'squads.js')
 
 const teamNameMap = {
+  'Bosnia and Herzegovina': 'Bosnia',
   'Czech Republic': 'Czechia',
   'Curaçao': 'Curacao',
   'DR Congo': 'DR Congo',
