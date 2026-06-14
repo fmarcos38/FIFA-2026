@@ -14,6 +14,24 @@ import './App.css'
 const RESULTS_STORAGE_KEY = 'fifa-2026-results'
 const ADMIN_STORAGE_KEY = 'fifa-2026-admin'
 const INSTAGRAM_URL = 'https://www.instagram.com/fmarcos_casla/'
+const APP_UPDATE_CHECK_INTERVAL = 60 * 1000
+
+function getCurrentAppAsset() {
+  return document.querySelector('script[type="module"][src]')?.getAttribute('src') || ''
+}
+
+async function getLatestAppAsset() {
+  const response = await fetch(`/?update-check=${Date.now()}`, {
+    cache: 'no-store',
+  })
+
+  if (!response.ok) return ''
+
+  const html = await response.text()
+  const documentSnapshot = new DOMParser().parseFromString(html, 'text/html')
+
+  return documentSnapshot.querySelector('script[type="module"][src]')?.getAttribute('src') || ''
+}
 
 function App() {
   const [selectedCountry, setSelectedCountry] = useState(null)
@@ -33,6 +51,31 @@ function App() {
   useEffect(() => {
     localStorage.setItem(RESULTS_STORAGE_KEY, JSON.stringify(results))
   }, [results])
+
+  useEffect(() => {
+    if (import.meta.env.DEV) return undefined
+
+    const currentAsset = getCurrentAppAsset()
+    if (!currentAsset) return undefined
+
+    const checkForUpdate = async () => {
+      if (document.visibilityState !== 'visible') return
+
+      try {
+        const latestAsset = await getLatestAppAsset()
+
+        if (latestAsset && latestAsset !== currentAsset) {
+          window.location.reload()
+        }
+      } catch (error) {
+        console.info('No se pudo comprobar si hay una nueva version disponible.')
+      }
+    }
+
+    const intervalId = window.setInterval(checkForUpdate, APP_UPDATE_CHECK_INTERVAL)
+
+    return () => window.clearInterval(intervalId)
+  }, [])
 
   useEffect(() => {
     async function loadResults() {
