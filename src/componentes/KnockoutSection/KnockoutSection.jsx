@@ -25,6 +25,10 @@ function hasPenalties(result) {
   )
 }
 
+function isResolvedParticipant(label) {
+  return !/^(Ganador|Mejor|\d+° Grupo)/.test(label)
+}
+
 function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDelete }) {
   return (
     <section className="section knockout-section" id="eliminatorias">
@@ -33,9 +37,12 @@ function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDel
         <h2>Llaves eliminatorias</h2>
       </div>
       <div className="rounds-grid">
-        {rounds.map((round) => (
-          <article className="round-card" key={round.id}>
-            <h3>{round.title}</h3>
+        {rounds.map((round, roundIndex) => (
+          <article className={`round-card round-${round.id}`} key={round.id}>
+            <div className="round-card-heading">
+              <h3>{round.title}</h3>
+              <span>{round.matches.filter((match) => match.winner).length}/{round.matches.length}</span>
+            </div>
             <div className="slot-list">
               {round.matches.map((match, index) => {
                 const result = results[match.id]
@@ -54,7 +61,10 @@ function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDel
                   Number(result.homeGoals) === Number(result.awayGoals)
 
                 return (
-                  <div className={`match-slot knockout-slot ${match.winner ? 'has-winner' : ''}`} key={match.id}>
+                  <div
+                    className={`match-slot knockout-slot ${match.winner ? 'has-winner' : ''} ${roundIndex > 0 ? 'has-connector' : ''}`}
+                    key={match.id}
+                  >
                     <div className="knockout-meta">
                       <span>{match.id || `Partido ${index + 1}`}</span>
                       {isAdmin ? (
@@ -68,7 +78,7 @@ function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDel
                         kickoff && <time className="knockout-kickoff" dateTime={result.kickoff}>{kickoff}</time>
                       )}
                     </div>
-                    <div className="knockout-team-line">
+                    <div className={`knockout-team-line ${isResolvedParticipant(match.homeLabel) ? 'is-resolved' : 'is-seed'}`}>
                       <strong>{match.homeLabel}</strong>
                       {isAdmin ? (
                         <input
@@ -84,7 +94,7 @@ function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDel
                         <em>{hasScore ? result.homeGoals : '-'}</em>
                       )}
                     </div>
-                    <div className="knockout-team-line">
+                    <div className={`knockout-team-line ${isResolvedParticipant(match.awayLabel) ? 'is-resolved' : 'is-seed'}`}>
                       <strong>{match.awayLabel}</strong>
                       {isAdmin ? (
                         <input
@@ -139,7 +149,9 @@ function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDel
                         Penales: <strong>{result.homePenalties}</strong> - <strong>{result.awayPenalties}</strong>
                       </div>
                     )}
-                    <small>{match.winner ? `Avanza: ${match.winner}` : 'Pendiente'}</small>
+                    <small className="knockout-path">
+                      {match.winner ? `Avanza: ${match.winner}` : roundIndex === rounds.length - 1 ? 'Define el campeón' : `Ganador hacia ${rounds[roundIndex + 1]?.title || 'siguiente ronda'}`}
+                    </small>
                     {isAdmin && (
                       <button className="knockout-clear" type="button" onClick={() => onResultDelete(match.id)}>
                         Limpiar

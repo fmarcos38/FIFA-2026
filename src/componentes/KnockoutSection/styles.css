@@ -13,7 +13,7 @@
 .round-card {
   min-width: 230px;
   padding: 14px;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(8, 13, 24, 0.74);
@@ -21,11 +21,43 @@
   backdrop-filter: blur(18px);
 }
 
-.round-card h3 {
+.round-final {
+  border-color: rgba(0, 255, 178, 0.34);
+  background: linear-gradient(180deg, rgba(0, 255, 178, 0.08), rgba(8, 13, 24, 0.78));
+}
+
+.round-card-heading {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.round-card-heading h3 {
   margin: 0 0 12px;
   color: var(--text-strong);
   font-size: 1rem;
   font-weight: 850;
+}
+
+.round-card-heading h3 {
+  margin: 0;
+}
+
+.round-card-heading span {
+  min-width: 34px;
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 255, 178, 0.24);
+  border-radius: 999px;
+  color: var(--fluo);
+  background: rgba(0, 255, 178, 0.06);
+  font-size: 0.68rem;
+  font-weight: 900;
 }
 
 .slot-list {
@@ -52,12 +84,33 @@
 }
 
 .knockout-slot {
+  position: relative;
   display: grid;
   gap: 8px;
 }
 
+.knockout-slot.has-connector::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -14px;
+  width: 14px;
+  border-top: 1px solid rgba(0, 255, 178, 0.22);
+}
+
+.knockout-slot.has-connector::after {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: -14px;
+  border-left: 1px solid rgba(0, 255, 178, 0.14);
+}
+
 .knockout-meta {
-  display: grid;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 6px;
 }
 
@@ -76,6 +129,27 @@
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.035);
+}
+
+.knockout-team-line.is-resolved {
+  border-color: rgba(0, 255, 178, 0.28);
+  background: rgba(0, 255, 178, 0.055);
+}
+
+.knockout-team-line.is-resolved strong::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--fluo);
+  vertical-align: middle;
+}
+
+.knockout-team-line.is-seed strong {
+  color: var(--muted);
+  font-style: italic;
 }
 
 .knockout-team-line strong {
@@ -193,9 +267,19 @@
   color: var(--text-strong);
 }
 
-.knockout-slot small {
+.knockout-slot small,
+.knockout-path {
   color: var(--muted);
   font-size: 0.72rem;
+}
+
+.knockout-path {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 0 8px;
 }
 
 .knockout-kickoff {

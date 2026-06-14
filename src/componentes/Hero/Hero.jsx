@@ -37,7 +37,7 @@ function Hero({
 
         <div className="hero-copy">
           <div>
-            <span className="eyebrow">Canada / Mexico / United States</span>
+            <span className="eyebrow">Canadá / México / Estados Unidos</span>
             <h1>Fixture Mundial FIFA 2026</h1>
             <p>
               Grupos, cruces, horarios y planteles en una landing oscura que se actualiza automaticamente con datos del back.

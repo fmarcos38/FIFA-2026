@@ -1,4 +1,4 @@
-import { getFlagUrl } from '../../data/worldCupData'
+import { getFlagUrl, squadNameAliases } from '../../data/worldCupData'
 import { countrySquads, squadSourceUrl } from '../../data/squads'
 import './styles.css'
 
@@ -11,11 +11,11 @@ const positionSections = [
 
 const worldCupTitles = {
   Argentina: 3,
-  Brazil: 5,
-  England: 1,
-  France: 2,
-  Germany: 4,
-  Spain: 1,
+  Brasil: 5,
+  Inglaterra: 1,
+  Francia: 2,
+  Alemania: 4,
+  España: 1,
   Uruguay: 2,
 }
 
@@ -43,7 +43,8 @@ function groupSquad(players) {
 
 function CountryModal({ country, name, onClose }) {
   if (!country) return null
-  const squad = countrySquads[name] || buildFallbackSquad(country.players)
+  const squadLookupName = squadNameAliases[name] || name
+  const squad = countrySquads[squadLookupName] || buildFallbackSquad(country.players)
   const groupedSquad = groupSquad(squad)
   const titles = worldCupTitles[name] || 0
 

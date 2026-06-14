@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react'
 import { addDays, formatDateKey } from '../../helpers/dateTime'
-import { isFinishedResult } from '../../data/worldCupData'
+import { getFlagUrl, knockoutRounds } from '../../data/worldCupData'
 import MatchCard from '../MatchCard/MatchCard'
 import './styles.css'
+
+const FAVORITE_TEAM_STORAGE_KEY = 'fifa-2026-favorite-team'
 
 const filters = [
   { id: 'today', label: 'Hoy' },
@@ -10,25 +12,82 @@ const filters = [
   { id: 'week', label: 'Próximos 7 días' },
 ]
 
-function TournamentDashboard({ matches, results }) {
-  const [activeFilter, setActiveFilter] = useState('today')
-  const stats = useMemo(() => {
-    const played = matches.filter((match) => {
-      const result = results[match.id]
-      return isFinishedResult(result, result?.kickoff || match.kickoff)
-    }).length
+function normalizeSearch(value) {
+  return value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+}
 
-    return {
-      played,
-      pending: matches.length - played,
-    }
-  }, [matches, results])
+function getUpcomingMatch(matches, results, teamName) {
+  const now = Date.now()
+
+  return matches
+    .filter((match) => match.home === teamName || match.away === teamName)
+    .filter((match) => {
+      const kickoff = results[match.id]?.kickoff || match.kickoff
+      return kickoff && new Date(kickoff).getTime() >= now
+    })
+    .sort((a, b) => new Date(results[a.id]?.kickoff || a.kickoff) - new Date(results[b.id]?.kickoff || b.kickoff))[0]
+}
+
+function normalizeSeed(value) {
+  return normalizeSearch(value).replace(/a°/g, '°')
+}
+
+function getPossibleCross(seed) {
+  const round32 = knockoutRounds.find((round) => round.id === 'round32')
+  if (!round32 || !seed) return null
+
+  const targetSeed = normalizeSeed(seed)
+  const match = round32.matches.find((currentMatch) =>
+    [currentMatch.home, currentMatch.away].some((participant) => normalizeSeed(participant.seed || '') === targetSeed),
+  )
+
+  if (!match) return null
+
+  const opponent = normalizeSeed(match.home.seed || '') === targetSeed ? match.away.seed : match.home.seed
+
+  return `${match.id}: vs ${opponent}`
+}
+
+function getTeamContext(groups, matches, results, teamName) {
+  if (!teamName) return null
+
+  const group = groups.find((currentGroup) => currentGroup.teams.includes(teamName))
+  if (!group) return null
+
+  const standings = group.standings || []
+  const position = standings.findIndex((row) => row.team === teamName) + 1
+  const upcomingMatch = getUpcomingMatch(matches, results, teamName)
+  const knockoutSeed = position > 0 && position <= 2 ? `${position}° Grupo ${group.id}` : null
+  const possibleCross = getPossibleCross(knockoutSeed) || (knockoutSeed ? `Clasifica como ${knockoutSeed}` : 'Debe subir posiciones')
+
+  return {
+    group,
+    position,
+    upcomingMatch,
+    possibleCross,
+  }
+}
+
+function TournamentDashboard({ matches, groups, results, onSelectCountry }) {
+  const [activeFilter, setActiveFilter] = useState('today')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [favoriteTeam, setFavoriteTeam] = useState(() => localStorage.getItem(FAVORITE_TEAM_STORAGE_KEY) || '')
+  const teamOptions = useMemo(() => groups.flatMap((group) => group.teams).sort((a, b) => a.localeCompare(b)), [groups])
+  const favoriteContext = useMemo(
+    () => getTeamContext(groups, matches, results, favoriteTeam),
+    [favoriteTeam, groups, matches, results],
+  )
 
   const filteredMatches = useMemo(() => {
     const today = new Date()
     const todayKey = formatDateKey(today)
     const tomorrowKey = formatDateKey(addDays(today, 1))
     const weekLimitKey = formatDateKey(addDays(today, 7))
+    const query = normalizeSearch(searchTerm)
 
     return matches
       .filter((match) => {
@@ -42,11 +101,91 @@ function TournamentDashboard({ matches, results }) {
 
         return matchKey >= todayKey && matchKey <= weekLimitKey
       })
+      .filter((match) => {
+        if (!query) return true
+
+        const searchable = normalizeSearch(
+          `${match.home} ${match.away} ${match.home} vs ${match.away} ${match.away} vs ${match.home} ${match.groupName}`,
+        )
+
+        return searchable.includes(query)
+      })
       .sort((a, b) => new Date(results[a.id]?.kickoff || a.kickoff) - new Date(results[b.id]?.kickoff || b.kickoff))
-  }, [activeFilter, matches, results])
+  }, [activeFilter, matches, results, searchTerm])
+
+  const handleFavoriteTeamChange = (teamName) => {
+    setFavoriteTeam(teamName)
+
+    if (teamName) {
+      localStorage.setItem(FAVORITE_TEAM_STORAGE_KEY, teamName)
+      return
+    }
+
+    localStorage.removeItem(FAVORITE_TEAM_STORAGE_KEY)
+  }
 
   return (
     <section className="tournament-dashboard" aria-label="Panel del torneo">
+      <div className="favorite-team-panel">
+        <div className="favorite-team-heading">
+          <div>
+            <span className="eyebrow">Mi selección</span>
+            <h2>{favoriteTeam || 'Elegí una favorita'}</h2>
+          </div>
+          <select
+            aria-label="Elegir mi selección"
+            value={favoriteTeam}
+            onChange={(event) => handleFavoriteTeamChange(event.target.value)}
+          >
+            <option value="">Sin favorita</option>
+            {teamOptions.map((teamName) => (
+              <option value={teamName} key={teamName}>
+                {teamName}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {favoriteContext ? (
+          <div className="favorite-team-grid">
+            <div className="favorite-team-main">
+              <img src={getFlagUrl(favoriteTeam)} alt="" />
+              <div>
+                <strong>{favoriteTeam}</strong>
+                <span>Grupo {favoriteContext.group.id} · {favoriteContext.position || '-'}° puesto</span>
+              </div>
+            </div>
+
+            <div className="favorite-team-next">
+              <small>Próximo partido</small>
+              {favoriteContext.upcomingMatch ? (
+                <MatchCard
+                  match={favoriteContext.upcomingMatch}
+                  result={results[favoriteContext.upcomingMatch.id] || {}}
+                  className="compact-match-card"
+                />
+              ) : (
+                <span className="favorite-team-empty">Sin partidos pendientes</span>
+              )}
+            </div>
+
+            <div className="favorite-team-facts">
+              <span>
+                Plantel <strong>Lista por posición</strong>
+              </span>
+              <span>
+                Posible cruce <strong>{favoriteContext.possibleCross}</strong>
+              </span>
+              <button type="button" onClick={() => onSelectCountry(favoriteTeam)}>
+                Ver plantel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="favorite-team-empty">Seleccioná un equipo para ver su resumen, próximo partido y acceso al plantel.</p>
+        )}
+      </div>
+
       <div className="upcoming-panel">
         <div className="upcoming-header">
           <div>
@@ -65,6 +204,18 @@ function TournamentDashboard({ matches, results }) {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="upcoming-tools">
+          <label>
+            <span>Buscar</span>
+            <input
+              type="search"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="Argentina, Grupo J, Brasil vs Marruecos"
+            />
+          </label>
         </div>
 
         <div className="upcoming-list">

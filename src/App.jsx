@@ -183,7 +183,12 @@ function App() {
         saveStatus={saveStatus}
       />
       <main>
-        <TournamentDashboard matches={groupMatches} results={results} />
+        <TournamentDashboard
+          matches={groupMatches}
+          groups={groupsWithStandings}
+          results={results}
+          onSelectCountry={setSelectedCountry}
+        />
         <GroupsSection
           groups={groupsWithStandings}
           isAdmin={isAdmin}

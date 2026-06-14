@@ -8,7 +8,8 @@
 }
 
 .dashboard-stat-grid,
-.upcoming-panel {
+.upcoming-panel,
+.favorite-team-panel {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(8, 13, 24, 0.84);
@@ -45,6 +46,11 @@
   padding: 16px;
 }
 
+.favorite-team-panel {
+  padding: 16px;
+}
+
+.favorite-team-heading,
 .upcoming-header {
   display: flex;
   align-items: end;
@@ -53,11 +59,111 @@
   margin-bottom: 14px;
 }
 
+.favorite-team-heading h2,
 .upcoming-header h2 {
   margin: 4px 0 0;
   color: var(--text-strong);
   font-size: 1.6rem;
   text-transform: uppercase;
+}
+
+.favorite-team-heading select,
+.upcoming-tools input,
+.upcoming-tools select {
+  min-height: 38px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0 10px;
+  font: inherit;
+  outline: 0;
+}
+
+.favorite-team-heading select {
+  width: min(260px, 100%);
+}
+
+.favorite-team-heading select:focus,
+.upcoming-tools input:focus,
+.upcoming-tools select:focus {
+  border-color: var(--fluo);
+  box-shadow: 0 0 0 2px rgba(60, 255, 173, 0.12);
+}
+
+.favorite-team-grid {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(320px, 1.4fr) minmax(220px, 0.8fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.favorite-team-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.favorite-team-main img {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.favorite-team-main div,
+.favorite-team-facts {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.favorite-team-main strong {
+  color: var(--text-strong);
+  font-size: 1.1rem;
+}
+
+.favorite-team-main span,
+.favorite-team-empty,
+.favorite-team-next small,
+.favorite-team-facts span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.favorite-team-facts strong {
+  display: block;
+  color: var(--text-strong);
+  font-size: 0.86rem;
+}
+
+.favorite-team-facts button {
+  justify-self: start;
+  min-height: 32px;
+  border: 1px solid var(--fluo);
+  border-radius: 6px;
+  color: #06120d;
+  background: var(--fluo);
+  padding: 0 10px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.favorite-team-next {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.compact-match-card {
+  grid-template-columns: 76px minmax(0, 1fr) 74px;
+  min-height: 46px;
 }
 
 .upcoming-filters {
@@ -83,6 +189,25 @@
   border-color: var(--fluo);
   background: var(--fluo);
   font-weight: 850;
+}
+
+.upcoming-tools {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.upcoming-tools label {
+  display: grid;
+  gap: 5px;
+}
+
+.upcoming-tools label span {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .upcoming-list {
@@ -121,10 +246,38 @@
     align-items: stretch;
     flex-direction: column;
   }
+
+  .favorite-team-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .favorite-team-heading select {
+    width: 100%;
+  }
+
+  .favorite-team-grid {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .upcoming-tools {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 420px) {
+  .favorite-team-panel,
   .upcoming-panel {
     padding: 12px;
+  }
+
+  .favorite-team-heading h2,
+  .upcoming-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .compact-match-card {
+    grid-template-columns: 42px minmax(0, 1fr) 52px;
   }
 }
