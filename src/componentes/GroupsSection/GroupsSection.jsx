@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import GroupsIcon from '@mui/icons-material/Groups'
 import { buildInitialStandings, countries, getFlagUrl } from '../../data/worldCupData'
 import GroupFixtureList from '../GroupFixtureList/GroupFixtureList'
 import './styles.css'
@@ -64,10 +65,19 @@ function GroupsSection({ groups, isAdmin, results, onResultChange, onResultDelet
                   return (
                     <tr key={row.team}>
                       <td>
-                        <button className="standing-team" type="button" onClick={() => onSelectCountry(row.team)}>
+                        <button
+                          className="standing-team"
+                          type="button"
+                          onClick={() => onSelectCountry(row.team)}
+                          aria-label={`Ver plantel de ${row.team}`}
+                          title={`Ver plantel de ${row.team}`}
+                        >
                           <span className="standings-position">{index + 1}</span>
                           <span className="flag-button" aria-hidden="true">
                             <img src={getFlagUrl(row.team)} alt="" loading="lazy" />
+                            <span className="squad-access-icon">
+                              <GroupsIcon fontSize="inherit" />
+                            </span>
                           </span>
                           <span>{row.team}</span>
                           <small>{country.confederation}</small>

@@ -16,13 +16,24 @@ const ADMIN_STORAGE_KEY = 'fifa-2026-admin'
 const INSTAGRAM_URL = 'https://www.instagram.com/fmarcos_casla/'
 const APP_UPDATE_CHECK_INTERVAL = 60 * 1000
 
-function getCurrentAppAsset() {
-  return document.querySelector('script[type="module"][src]')?.getAttribute('src') || ''
+function getAppAssetSignature(documentRoot = document) {
+  const scripts = Array.from(documentRoot.querySelectorAll('script[type="module"][src]')).map((element) =>
+    element.getAttribute('src'),
+  )
+  const styles = Array.from(documentRoot.querySelectorAll('link[rel="stylesheet"][href]')).map((element) =>
+    element.getAttribute('href'),
+  )
+
+  return [...scripts, ...styles].filter(Boolean).sort().join('|')
 }
 
-async function getLatestAppAsset() {
-  const response = await fetch(`/?update-check=${Date.now()}`, {
+async function getLatestAppAssetSignature() {
+  const response = await fetch(`${window.location.pathname}?update-check=${Date.now()}`, {
     cache: 'no-store',
+    headers: {
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+    },
   })
 
   if (!response.ok) return ''
@@ -30,7 +41,7 @@ async function getLatestAppAsset() {
   const html = await response.text()
   const documentSnapshot = new DOMParser().parseFromString(html, 'text/html')
 
-  return documentSnapshot.querySelector('script[type="module"][src]')?.getAttribute('src') || ''
+  return getAppAssetSignature(documentSnapshot)
 }
 
 function App() {
@@ -55,16 +66,16 @@ function App() {
   useEffect(() => {
     if (import.meta.env.DEV) return undefined
 
-    const currentAsset = getCurrentAppAsset()
-    if (!currentAsset) return undefined
+    const currentAssetSignature = getAppAssetSignature()
+    if (!currentAssetSignature) return undefined
 
     const checkForUpdate = async () => {
       if (document.visibilityState !== 'visible') return
 
       try {
-        const latestAsset = await getLatestAppAsset()
+        const latestAssetSignature = await getLatestAppAssetSignature()
 
-        if (latestAsset && latestAsset !== currentAsset) {
+        if (latestAssetSignature && latestAssetSignature !== currentAssetSignature) {
           window.location.reload()
         }
       } catch (error) {
@@ -73,8 +84,14 @@ function App() {
     }
 
     const intervalId = window.setInterval(checkForUpdate, APP_UPDATE_CHECK_INTERVAL)
+    window.addEventListener('focus', checkForUpdate)
+    document.addEventListener('visibilitychange', checkForUpdate)
 
-    return () => window.clearInterval(intervalId)
+    return () => {
+      window.clearInterval(intervalId)
+      window.removeEventListener('focus', checkForUpdate)
+      document.removeEventListener('visibilitychange', checkForUpdate)
+    }
   }, [])
 
   useEffect(() => {

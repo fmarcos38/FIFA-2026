@@ -6,6 +6,7 @@ import {
   hasMatchScore,
   hasMinimumMatchDurationElapsed,
 } from '../../data/worldCupData'
+import GroupsIcon from '@mui/icons-material/Groups'
 import { formatKickoff, fromDatetimeLocalValue, toDatetimeLocalValue } from '../../helpers/dateTime'
 import './styles.css'
 
@@ -54,8 +55,19 @@ function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDel
                 </time>
               )}
 
-              <button className="fixture-team" type="button" onClick={() => onSelectCountry(match.home)}>
-                <img src={getFlagUrl(match.home)} alt="" loading="lazy" />
+              <button
+                className="fixture-team"
+                type="button"
+                onClick={() => onSelectCountry(match.home)}
+                aria-label={`Ver plantel de ${match.home}`}
+                title={`Ver plantel de ${match.home}`}
+              >
+                <span className="fixture-flag-access" aria-hidden="true">
+                  <img src={getFlagUrl(match.home)} alt="" loading="lazy" />
+                  <span className="squad-access-icon">
+                    <GroupsIcon fontSize="inherit" />
+                  </span>
+                </span>
                 <span>{match.home}</span>
               </button>
 
@@ -91,9 +103,20 @@ function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDel
                 </div>
               )}
 
-              <button className="fixture-team away" type="button" onClick={() => onSelectCountry(match.away)}>
+              <button
+                className="fixture-team away"
+                type="button"
+                onClick={() => onSelectCountry(match.away)}
+                aria-label={`Ver plantel de ${match.away}`}
+                title={`Ver plantel de ${match.away}`}
+              >
                 <span>{match.away}</span>
-                <img src={getFlagUrl(match.away)} alt="" loading="lazy" />
+                <span className="fixture-flag-access" aria-hidden="true">
+                  <img src={getFlagUrl(match.away)} alt="" loading="lazy" />
+                  <span className="squad-access-icon">
+                    <GroupsIcon fontSize="inherit" />
+                  </span>
+                </span>
               </button>
 
               {isAdmin && hasScore && (
