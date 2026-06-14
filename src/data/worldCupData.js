@@ -159,12 +159,13 @@ export function hasMinimumMatchDurationElapsed(kickoff) {
   const kickoffDate = new Date(kickoff)
   if (Number.isNaN(kickoffDate.getTime())) return false
 
-  return Date.now() >= kickoffDate.getTime() + 95 * 60 * 1000
+  return Date.now() >= kickoffDate.getTime() + 100 * 60 * 1000
 }
 
 export function getMatchStatus(result, kickoff = result?.kickoff) {
   if (!hasMatchScore(result)) return ''
-  if (result.status === 'partial') return 'partial'
+  if (['partial', 'extraTime', 'penalties'].includes(result.status)) return result.status
+  if (result.status === 'finished' && hasMinimumMatchDurationElapsed(kickoff)) return 'finished'
   if (hasMinimumMatchDurationElapsed(kickoff)) return 'finished'
   return 'partial'
 }
@@ -177,6 +178,8 @@ export function getMatchStatusLabel(result, kickoff = result?.kickoff) {
   const status = getMatchStatus(result, kickoff)
 
   if (status === 'partial') return 'Parcial'
+  if (status === 'extraTime') return 'Alargue'
+  if (status === 'penalties') return 'Penales'
   if (status === 'finished') return 'Finalizado'
   return ''
 }

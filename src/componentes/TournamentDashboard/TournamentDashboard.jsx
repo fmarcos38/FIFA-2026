@@ -28,7 +28,7 @@ function TournamentDashboard({ matches, results }) {
     const today = new Date()
     const todayKey = formatDateKey(today)
     const tomorrowKey = formatDateKey(addDays(today, 1))
-    const weekLimit = addDays(today, 7)
+    const weekLimitKey = formatDateKey(addDays(today, 7))
 
     return matches
       .filter((match) => {
@@ -40,7 +40,7 @@ function TournamentDashboard({ matches, results }) {
         if (activeFilter === 'today') return matchKey === todayKey
         if (activeFilter === 'tomorrow') return matchKey === tomorrowKey
 
-        return matchDate >= today && matchDate <= weekLimit
+        return matchKey >= todayKey && matchKey <= weekLimitKey
       })
       .sort((a, b) => new Date(results[a.id]?.kickoff || a.kickoff) - new Date(results[b.id]?.kickoff || b.kickoff))
   }, [activeFilter, matches, results])
@@ -69,7 +69,7 @@ function TournamentDashboard({ matches, results }) {
 
         <div className="upcoming-list">
           {filteredMatches.length > 0 ? (
-            filteredMatches.slice(0, 8).map((match) => {
+            filteredMatches.map((match) => {
               const result = results[match.id] || {}
 
               return (

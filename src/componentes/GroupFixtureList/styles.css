@@ -51,6 +51,14 @@
   background: rgba(255, 209, 102, 0.045);
 }
 
+.fixture-row.status-extraTime {
+  background: rgba(139, 214, 255, 0.045);
+}
+
+.fixture-row.status-penalties {
+  background: rgba(255, 107, 159, 0.045);
+}
+
 .fixture-kickoff {
   color: var(--muted);
   font-size: 0.72rem;
@@ -190,6 +198,16 @@
 .fixture-status.status-partial {
   color: #140b01;
   background: #ffd166;
+}
+
+.fixture-status.status-extraTime {
+  color: #071018;
+  background: #8bd6ff;
+}
+
+.fixture-status.status-penalties {
+  color: #140712;
+  background: #ff6b9f;
 }
 
 .fixture-status-select {

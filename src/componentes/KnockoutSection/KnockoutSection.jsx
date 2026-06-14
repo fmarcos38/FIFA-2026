@@ -108,6 +108,8 @@ function KnockoutSection({ isAdmin, rounds, results, onResultChange, onResultDel
                         onChange={(event) => onResultChange(match.id, { status: event.target.value })}
                       >
                         <option value="partial">Parcial</option>
+                        <option value="extraTime">Alargue</option>
+                        <option value="penalties">Penales</option>
                         <option value="finished" disabled={!canFinish}>Finalizado</option>
                       </select>
                     )}

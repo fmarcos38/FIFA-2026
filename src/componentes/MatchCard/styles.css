@@ -43,6 +43,16 @@
   background: #ffd166;
 }
 
+.status-extraTime {
+  color: #071018;
+  background: #8bd6ff;
+}
+
+.status-penalties {
+  color: #140712;
+  background: #ff6b9f;
+}
+
 .match-card-kickoff {
   display: flex;
   flex-wrap: wrap;
