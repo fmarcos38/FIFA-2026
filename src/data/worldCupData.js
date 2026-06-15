@@ -432,16 +432,66 @@ function findKnockoutMatch(matchId, rounds = knockoutRounds) {
   return flattenKnockoutMatches(rounds).find((match) => match.id === matchId)
 }
 
-function resolveKnockoutParticipant(participant, results, rounds) {
-  if (participant.seed) return participant.seed
+function getGroupSeedMatch(seed) {
+  return seed.match(/^(\d+)(?:Â°|°) Grupo ([A-L])$/)
+}
+
+function getBestThirdSeedMatch(seed) {
+  return seed.match(/^Mejor 3(?:Â°|°) ([A-L](?:\/[A-L])*)$/)
+}
+
+function hasGroupStarted(standings = []) {
+  return standings.some((row) => row.played > 0)
+}
+
+function compareThirdPlaceRows(a, b) {
+  if (b.points !== a.points) return b.points - a.points
+  if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference
+  if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor
+  return a.team.localeCompare(b.team)
+}
+
+function resolveSeedParticipant(seed, standingsByGroup = {}) {
+  const groupSeedMatch = getGroupSeedMatch(seed)
+
+  if (groupSeedMatch) {
+    const position = Number(groupSeedMatch[1]) - 1
+    const groupId = groupSeedMatch[2]
+    const standings = standingsByGroup[groupId] || []
+
+    return hasGroupStarted(standings) && standings[position]?.team ? standings[position].team : seed
+  }
+
+  const bestThirdSeedMatch = getBestThirdSeedMatch(seed)
+
+  if (bestThirdSeedMatch) {
+    const groupIds = bestThirdSeedMatch[1].split('/')
+    const thirdPlacedTeams = groupIds
+      .map((groupId) => {
+        const standings = standingsByGroup[groupId] || []
+        const row = standings[2]
+
+        return hasGroupStarted(standings) && row ? { ...row, groupId } : null
+      })
+      .filter(Boolean)
+      .sort(compareThirdPlaceRows)
+
+    return thirdPlacedTeams[0]?.team || seed
+  }
+
+  return seed
+}
+
+function resolveKnockoutParticipant(participant, results, rounds, standingsByGroup) {
+  if (participant.seed) return resolveSeedParticipant(participant.seed, standingsByGroup)
 
   const previousMatch = findKnockoutMatch(participant.winnerOf, rounds)
-  const winner = previousMatch ? getKnockoutWinner(previousMatch, results, rounds) : null
+  const winner = previousMatch ? getKnockoutWinner(previousMatch, results, rounds, standingsByGroup) : null
 
   return winner || `Ganador ${participant.winnerOf}`
 }
 
-export function getKnockoutWinner(match, results, rounds = knockoutRounds) {
+export function getKnockoutWinner(match, results, rounds = knockoutRounds, standingsByGroup = {}) {
   const result = results[match.id]
 
   if (!isFinishedResult(result, result?.kickoff || match.kickoff)) return null
@@ -464,23 +514,25 @@ export function getKnockoutWinner(match, results, rounds = knockoutRounds) {
     if (!hasPenalties) return null
 
     return homePenalties > awayPenalties
-      ? resolveKnockoutParticipant(match.home, results, rounds)
-      : resolveKnockoutParticipant(match.away, results, rounds)
+      ? resolveKnockoutParticipant(match.home, results, rounds, standingsByGroup)
+      : resolveKnockoutParticipant(match.away, results, rounds, standingsByGroup)
   }
 
   return homeGoals > awayGoals
-    ? resolveKnockoutParticipant(match.home, results, rounds)
-    : resolveKnockoutParticipant(match.away, results, rounds)
+    ? resolveKnockoutParticipant(match.home, results, rounds, standingsByGroup)
+    : resolveKnockoutParticipant(match.away, results, rounds, standingsByGroup)
 }
 
-export function buildKnockoutBracket(results, rounds = knockoutRounds) {
+export function buildKnockoutBracket(results, rounds = knockoutRounds, groupsWithStandings = []) {
+  const standingsByGroup = Object.fromEntries(groupsWithStandings.map((group) => [group.id, group.standings || []]))
+
   return rounds.map((round) => ({
     ...round,
     matches: round.matches.map((match) => ({
       ...match,
-      homeLabel: resolveKnockoutParticipant(match.home, results, rounds),
-      awayLabel: resolveKnockoutParticipant(match.away, results, rounds),
-      winner: getKnockoutWinner(match, results, rounds),
+      homeLabel: resolveKnockoutParticipant(match.home, results, rounds, standingsByGroup),
+      awayLabel: resolveKnockoutParticipant(match.away, results, rounds, standingsByGroup),
+      winner: getKnockoutWinner(match, results, rounds, standingsByGroup),
     })),
   }))
 }

@@ -2,53 +2,188 @@
   padding-top: 20px;
 }
 
-.rounds-grid {
+.knockout-section,
+.knockout-section strong,
+.knockout-section h2,
+.knockout-section h3,
+.knockout-section button,
+.knockout-section input,
+.knockout-section select {
+  font-weight: 400;
+}
+
+.knockout-heading {
+  align-items: flex-end;
+}
+
+.knockout-heading h2 {
+  margin-bottom: 18px;
+}
+
+.knockout-summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.knockout-summary span,
+.knockout-summary strong,
+.bracket-fit-toggle,
+.bracket-zoom-controls button {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(0, 255, 178, 0.22);
+  border-radius: 999px;
+  background: rgba(0, 255, 178, 0.06);
+  padding: 0 8px;
+}
+
+.knockout-summary strong {
+  color: var(--fluo);
+}
+
+.bracket-fit-toggle {
+  color: var(--text-strong);
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.045);
+  cursor: pointer;
+  font: inherit;
+  text-transform: uppercase;
+}
+
+.bracket-fit-toggle:hover,
+.bracket-fit-toggle[aria-pressed="true"],
+.bracket-zoom-controls button:hover:not(:disabled) {
+  border-color: rgba(0, 255, 178, 0.34);
+  color: var(--fluo);
+}
+
+.bracket-zoom-controls {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.bracket-zoom-controls button {
+  min-width: 28px;
+  justify-content: center;
+  color: var(--text-strong);
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.045);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.bracket-zoom-controls button:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+.bracket-map {
   display: grid;
-  grid-template-columns: repeat(5, minmax(230px, 1fr));
-  gap: 12px;
+  grid-template-columns:
+    minmax(198px, 1fr)
+    minmax(198px, 1fr)
+    minmax(198px, 1fr)
+    minmax(198px, 1fr)
+    minmax(220px, 1.08fr)
+    minmax(198px, 1fr)
+    minmax(198px, 1fr)
+    minmax(198px, 1fr)
+    minmax(198px, 1fr);
+  align-items: stretch;
+  gap: 10px;
   overflow-x: auto;
-  padding-bottom: 12px;
+  padding: 6px 2px 14px;
+}
+
+.is-fit-mode .knockout-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  justify-items: stretch;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+
+.is-fit-mode .knockout-heading .eyebrow {
+  font-size: 0.55rem;
+}
+
+.is-fit-mode .knockout-heading h2 {
+  display: block;
+  margin: 0;
+  font-size: clamp(1.35rem, 2.2vw, 2.6rem);
+  line-height: 0.95;
+}
+
+.is-fit-mode .knockout-summary {
+  justify-content: flex-end;
+  font-size: 0.76rem;
 }
 
 .round-card {
-  min-width: 230px;
-  padding: 14px;
+  min-width: 198px;
+  display: flex;
+  flex-direction: column;
   overflow: visible;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(8, 13, 24, 0.74);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
+    rgba(8, 13, 24, 0.78);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(18px);
 }
 
 .round-final {
   border-color: rgba(0, 255, 178, 0.34);
-  background: linear-gradient(180deg, rgba(0, 255, 178, 0.08), rgba(8, 13, 24, 0.78));
+  background:
+    linear-gradient(180deg, rgba(0, 255, 178, 0.1), rgba(255, 255, 255, 0.02)),
+    rgba(8, 13, 24, 0.82);
+}
+
+.side-center {
+  min-width: 220px;
+  align-self: center;
+  border-color: rgba(0, 255, 178, 0.42);
+  box-shadow: 0 24px 90px rgba(0, 255, 178, 0.08), 0 24px 80px rgba(0, 0, 0, 0.28);
+}
+
+.side-center .round-card-heading {
+  justify-content: center;
+}
+
+.side-center .round-card-heading h3 {
+  font-size: 0.86rem;
 }
 
 .round-card-heading {
-  min-height: 30px;
+  min-height: 34px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.round-card-heading h3 {
-  margin: 0 0 12px;
-  color: var(--text-strong);
-  font-size: 1rem;
-  font-weight: 850;
+  gap: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 8px;
 }
 
 .round-card-heading h3 {
   margin: 0;
+  color: var(--text-strong);
+  font-size: 0.78rem;
+  font-weight: 400;
 }
 
 .round-card-heading span {
-  min-width: 34px;
-  min-height: 22px;
+  min-width: 28px;
+  min-height: 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -56,20 +191,29 @@
   border-radius: 999px;
   color: var(--fluo);
   background: rgba(0, 255, 178, 0.06);
-  font-size: 0.68rem;
-  font-weight: 900;
+  font-size: 0.6rem;
+  font-weight: 400;
 }
 
 .slot-list {
-  display: grid;
-  gap: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 7px;
+  padding: 8px;
+}
+
+.final-slot-list {
+  min-height: 250px;
+  justify-content: center;
 }
 
 .match-slot {
-  min-height: 52px;
+  min-height: 42px;
   border: 1px dashed var(--line-strong);
-  border-radius: 6px;
-  padding: 9px;
+  border-radius: 5px;
+  padding: 6px;
   background: rgba(255, 255, 255, 0.035);
 }
 
@@ -80,54 +224,83 @@
 .match-slot strong {
   display: block;
   color: var(--text-strong);
-  font-size: 0.9rem;
+  font-size: 0.72rem;
 }
 
 .knockout-slot {
   position: relative;
   display: grid;
-  gap: 8px;
+  gap: 5px;
+  z-index: 1;
 }
 
 .knockout-slot.has-connector::before {
   content: "";
   position: absolute;
   top: 50%;
-  left: -14px;
-  width: 14px;
-  border-top: 1px solid rgba(0, 255, 178, 0.22);
+  left: -21px;
+  width: 20px;
+  border-top: 2px solid rgba(0, 255, 178, 0.3);
 }
 
 .knockout-slot.has-connector::after {
   content: "";
   position: absolute;
-  top: 18px;
-  bottom: 18px;
-  left: -14px;
-  border-left: 1px solid rgba(0, 255, 178, 0.14);
+  top: -18px;
+  bottom: -18px;
+  left: -21px;
+  border-left: 2px solid rgba(0, 255, 178, 0.16);
+}
+
+.side-outer .knockout-slot::before,
+.side-outer .knockout-slot::after {
+  display: none;
+}
+
+.side-center .knockout-slot.center-final::before {
+  left: -19px;
+  width: 18px;
+}
+
+.side-center .knockout-slot.center-final::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -19px;
+  width: 18px;
+  border-top: 2px solid rgba(0, 255, 178, 0.3);
 }
 
 .knockout-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
+  gap: 4px;
+}
+
+.knockout-meta > span {
+  min-width: 44px;
+  color: var(--fluo);
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 .knockout-slot.has-winner {
-  border-color: rgba(0, 255, 178, 0.42);
-  background: rgba(0, 255, 178, 0.055);
+  border-color: rgba(0, 255, 178, 0.46);
+  background: rgba(0, 255, 178, 0.065);
+  box-shadow: inset 3px 0 0 rgba(0, 255, 178, 0.6);
 }
 
 .knockout-team-line {
-  min-height: 32px;
+  min-height: 27px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 28px;
+  grid-template-columns: minmax(0, 1fr) 25px;
   align-items: center;
-  gap: 8px;
-  padding: 0 8px;
+  gap: 5px;
+  padding: 0 6px;
   border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 6px;
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.035);
 }
 
@@ -136,23 +309,28 @@
   background: rgba(0, 255, 178, 0.055);
 }
 
-.knockout-team-line.is-resolved strong::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  display: inline-block;
-  margin-right: 6px;
-  border-radius: 50%;
-  background: var(--fluo);
-  vertical-align: middle;
-}
-
 .knockout-team-line.is-seed strong {
   color: var(--muted);
   font-style: italic;
 }
 
-.knockout-team-line strong {
+.knockout-team-name {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.knockout-team-name img {
+  width: 17px;
+  height: 12px;
+  flex: 0 0 auto;
+  border-radius: 2px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.knockout-team-name strong {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -162,43 +340,43 @@
 .knockout-team-line em {
   color: var(--fluo);
   font-style: normal;
-  font-weight: 900;
+  font-weight: 400;
   text-align: right;
 }
 
 .knockout-team-line input,
 .knockout-penalty-editor input {
-  width: 34px;
-  height: 30px;
+  width: 28px;
+  height: 24px;
   border: 1px solid var(--line-strong);
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--text-strong);
   background: rgba(0, 0, 0, 0.28);
   font: inherit;
-  font-weight: 850;
+  font-weight: 400;
   text-align: center;
 }
 
 .knockout-date-input {
   width: 100%;
-  min-height: 32px;
+  min-height: 26px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--text-strong);
   background: rgba(0, 0, 0, 0.24);
   font: inherit;
-  font-size: 0.72rem;
-  padding: 0 8px;
+  font-size: 0.62rem;
+  padding: 0 6px;
 }
 
 .knockout-status,
 .knockout-status-select {
-  min-height: 30px;
+  min-height: 25px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 5px;
   font: inherit;
-  font-size: 0.68rem;
-  font-weight: 900;
+  font-size: 0.6rem;
+  font-weight: 400;
   text-transform: uppercase;
 }
 
@@ -208,7 +386,7 @@
   justify-content: center;
   color: #07120f;
   background: var(--fluo);
-  padding: 0 8px;
+  padding: 0 6px;
 }
 
 .knockout-status.status-partial {
@@ -230,35 +408,35 @@
   width: 100%;
   color: var(--text-strong);
   background: rgba(0, 0, 0, 0.24);
-  padding: 0 8px;
+  padding: 0 6px;
   cursor: pointer;
 }
 
 .knockout-penalty-editor {
-  min-height: 34px;
+  min-height: 27px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 34px auto 34px;
+  grid-template-columns: minmax(0, 1fr) 28px auto 28px;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 800;
+  font-size: 0.6rem;
+  font-weight: 400;
   text-transform: uppercase;
 }
 
 .knockout-penalty-editor strong {
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 0.66rem;
 }
 
 .knockout-clear {
-  min-height: 30px;
+  min-height: 25px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--muted);
   background: rgba(255, 255, 255, 0.04);
   font: inherit;
-  font-size: 0.72rem;
+  font-size: 0.62rem;
   cursor: pointer;
 }
 
@@ -270,44 +448,298 @@
 .knockout-slot small,
 .knockout-path {
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 0.6rem;
 }
 
 .knockout-path {
-  min-height: 24px;
+  min-height: 19px;
   display: inline-flex;
   align-items: center;
-  border-radius: 6px;
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.035);
-  padding: 0 8px;
+  padding: 0 6px;
 }
 
 .knockout-kickoff {
   color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 750;
+  font-size: 0.58rem;
+  font-weight: 400;
   text-transform: uppercase;
 }
 
 .penalty-line {
   color: var(--muted);
-  font-size: 0.74rem;
+  font-size: 0.62rem;
 }
 
 .penalty-line strong {
   display: inline;
   color: var(--fluo);
-  font-size: 0.78rem;
+  font-size: 0.64rem;
+}
+
+@media (min-width: 921px) {
+  .bracket-map.is-fit {
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr))
+      minmax(0, 1.05fr)
+      repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    overflow-x: visible;
+    align-items: stretch;
+    min-height: calc(100vh - 108px);
+    padding: 0;
+  }
+
+  .bracket-map.is-fit .round-card {
+    min-width: 0;
+    min-height: calc(100vh - 114px);
+    max-height: none;
+    border-radius: 4px;
+  }
+
+  .bracket-map.is-fit .side-center {
+    min-width: 0;
+    max-height: none;
+    align-self: stretch;
+  }
+
+  .bracket-map.is-fit .round-card-heading {
+    min-height: 28px;
+    padding: 0 5px;
+  }
+
+  .bracket-map.is-fit .round-card-heading h3 {
+    font-size: 0.66rem;
+  }
+
+  .bracket-map.is-fit .round-card-heading span {
+    min-width: 24px;
+    min-height: 17px;
+    font-size: 0.56rem;
+  }
+
+  .bracket-map.is-fit .slot-list {
+    gap: 5px;
+    padding: 5px;
+  }
+
+  .bracket-map.is-fit .final-slot-list {
+    min-height: auto;
+  }
+
+  .bracket-map.is-fit .match-slot {
+    min-height: 38px;
+    padding: 4px;
+    border-style: solid;
+  }
+
+  .bracket-map.is-fit .knockout-slot {
+    gap: 3px;
+  }
+
+  .bracket-map.is-fit .knockout-meta {
+    min-height: 15px;
+  }
+
+  .bracket-map.is-fit .knockout-meta > span {
+    font-size: 0.58rem;
+  }
+
+  .bracket-map.is-fit .knockout-meta > span {
+    min-width: 36px;
+  }
+
+  .bracket-map.is-fit .knockout-date-input,
+  .bracket-map.is-fit .knockout-kickoff,
+  .bracket-map.is-fit .knockout-clear,
+  .bracket-map.is-fit .knockout-status-select,
+  .bracket-map.is-fit .knockout-penalty-editor {
+    display: none;
+  }
+
+  .bracket-map.is-fit .knockout-team-line {
+    min-height: 23px;
+    grid-template-columns: minmax(0, 1fr) 18px;
+    gap: 3px;
+    padding: 0 4px;
+  }
+
+  .bracket-map.is-fit .knockout-team-name {
+    gap: 4px;
+  }
+
+  .bracket-map.is-fit .knockout-team-name img {
+    width: 14px;
+    height: 10px;
+  }
+
+  .bracket-map.is-fit .match-slot strong {
+    font-size: 0.62rem;
+  }
+
+  .bracket-map.is-fit .knockout-team-line em {
+    font-size: 0.62rem;
+  }
+
+  .bracket-map.is-fit .knockout-path,
+  .bracket-map.is-fit .knockout-status,
+  .bracket-map.is-fit .penalty-line {
+    display: none;
+  }
+
+  .bracket-map.is-fit .knockout-slot.has-connector::before {
+    left: -10px;
+    width: 9px;
+    border-top-width: 1px;
+  }
+
+  .bracket-map.is-fit .knockout-slot.has-connector::after {
+    top: -12px;
+    bottom: -12px;
+    left: -10px;
+    border-left-width: 1px;
+  }
+
+  .bracket-map.is-fit .side-center .knockout-slot.center-final::before {
+    left: -10px;
+    width: 9px;
+    border-top-width: 1px;
+  }
+
+  .bracket-map.is-fit .side-center .knockout-slot.center-final::after {
+    right: -10px;
+    width: 9px;
+    border-top-width: 1px;
+  }
+
+  .bracket-map.is-fit.zoom-small .round-card-heading {
+    min-height: 24px;
+  }
+
+  .bracket-map.is-fit.zoom-small .round-card-heading h3 {
+    font-size: 0.56rem;
+  }
+
+  .bracket-map.is-fit.zoom-small .round-card-heading span {
+    min-width: 20px;
+    min-height: 15px;
+    font-size: 0.48rem;
+  }
+
+  .bracket-map.is-fit.zoom-small .slot-list {
+    gap: 3px;
+    padding: 4px;
+  }
+
+  .bracket-map.is-fit.zoom-small .match-slot {
+    min-height: 30px;
+    padding: 3px;
+  }
+
+  .bracket-map.is-fit.zoom-small .knockout-team-line {
+    min-height: 18px;
+  }
+
+  .bracket-map.is-fit.zoom-small .match-slot strong,
+  .bracket-map.is-fit.zoom-small .knockout-team-line em {
+    font-size: 0.5rem;
+  }
+
+  .bracket-map.is-fit.zoom-small .knockout-team-name img {
+    width: 12px;
+    height: 8px;
+  }
+
+  .bracket-map.is-fit.zoom-large .round-card-heading {
+    min-height: 32px;
+  }
+
+  .bracket-map.is-fit.zoom-large .round-card-heading h3 {
+    font-size: 0.74rem;
+  }
+
+  .bracket-map.is-fit.zoom-large .round-card-heading span {
+    min-width: 28px;
+    min-height: 19px;
+    font-size: 0.62rem;
+  }
+
+  .bracket-map.is-fit.zoom-large .slot-list {
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .bracket-map.is-fit.zoom-large .match-slot {
+    min-height: 43px;
+    padding: 5px;
+  }
+
+  .bracket-map.is-fit.zoom-large .knockout-team-line {
+    min-height: 26px;
+  }
+
+  .bracket-map.is-fit.zoom-large .match-slot strong,
+  .bracket-map.is-fit.zoom-large .knockout-team-line em {
+    font-size: 0.68rem;
+  }
+
+  .bracket-map.is-fit.zoom-large .knockout-team-name img {
+    width: 16px;
+    height: 11px;
+  }
 }
 
 @media (max-width: 920px) {
-  .rounds-grid {
-    grid-template-columns: repeat(5, minmax(220px, 1fr));
+  .knockout-heading {
+    align-items: flex-start;
+  }
+
+  .knockout-summary {
+    justify-content: flex-start;
+  }
+
+  .bracket-map {
+    grid-template-columns:
+      repeat(4, minmax(190px, 1fr))
+      minmax(210px, 1.08fr)
+      repeat(4, minmax(190px, 1fr));
+  }
+
+  .bracket-fit-toggle {
+    display: none;
+  }
+
+  .bracket-zoom-controls {
+    display: none;
   }
 }
 
 @media (max-width: 640px) {
-  .rounds-grid {
-    grid-template-columns: repeat(5, minmax(210px, 1fr));
+  .bracket-map {
+    grid-template-columns:
+      repeat(4, minmax(180px, 1fr))
+      minmax(200px, 1.08fr)
+      repeat(4, minmax(180px, 1fr));
+    gap: 10px;
+  }
+
+  .knockout-slot.has-connector::before {
+    left: -27px;
+    width: 26px;
+  }
+
+  .knockout-slot.has-connector::after {
+    left: -27px;
+  }
+
+  .side-center .knockout-slot.center-final::before {
+    left: -27px;
+    width: 26px;
+  }
+
+  .side-center .knockout-slot.center-final::after {
+    right: -27px;
+    width: 26px;
   }
 }

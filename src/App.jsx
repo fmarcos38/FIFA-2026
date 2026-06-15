@@ -78,7 +78,7 @@ function App() {
         if (latestAssetSignature && latestAssetSignature !== currentAssetSignature) {
           window.location.reload()
         }
-      } catch (error) {
+      } catch {
         console.info('No se pudo comprobar si hay una nueva version disponible.')
       }
     }
@@ -104,7 +104,7 @@ function App() {
         if (data.results) {
           setResults(data.results)
         }
-      } catch (error) {
+      } catch {
         console.info('Usando resultados locales: el back no esta disponible.')
         setSaveStatus({ type: 'offline', text: 'Sin conexion con el back' })
       }
@@ -127,7 +127,10 @@ function App() {
     [results],
   )
 
-  const knockoutBracket = useMemo(() => buildKnockoutBracket(results, knockoutRounds), [results])
+  const knockoutBracket = useMemo(
+    () => buildKnockoutBracket(results, knockoutRounds, groupsWithStandings),
+    [groupsWithStandings, results],
+  )
   const groupMatches = useMemo(
     () =>
       groups.flatMap((group) =>
