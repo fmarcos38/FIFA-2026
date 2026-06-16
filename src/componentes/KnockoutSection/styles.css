@@ -278,12 +278,22 @@
   gap: 4px;
 }
 
-.knockout-meta > span {
-  min-width: 44px;
+.knockout-match-code,
+.knockout-short-date {
   color: var(--fluo);
   font-size: 0.58rem;
   font-weight: 400;
   letter-spacing: 0;
+}
+
+.knockout-match-code {
+  min-width: 36px;
+}
+
+.knockout-short-date {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-style: normal;
 }
 
 .knockout-slot.has-winner {
@@ -550,6 +560,15 @@
     min-width: 36px;
   }
 
+  .bracket-map.is-fit .knockout-match-code,
+  .bracket-map.is-fit .knockout-short-date {
+    font-size: 0.56rem;
+  }
+
+  .bracket-map.is-fit .knockout-match-code {
+    min-width: 31px;
+  }
+
   .bracket-map.is-fit .knockout-date-input,
   .bracket-map.is-fit .knockout-kickoff,
   .bracket-map.is-fit .knockout-clear,
@@ -646,6 +665,11 @@
     font-size: 0.5rem;
   }
 
+  .bracket-map.is-fit.zoom-small .knockout-match-code,
+  .bracket-map.is-fit.zoom-small .knockout-short-date {
+    font-size: 0.48rem;
+  }
+
   .bracket-map.is-fit.zoom-small .knockout-team-name img {
     width: 12px;
     height: 8px;
@@ -682,6 +706,11 @@
   .bracket-map.is-fit.zoom-large .match-slot strong,
   .bracket-map.is-fit.zoom-large .knockout-team-line em {
     font-size: 0.68rem;
+  }
+
+  .bracket-map.is-fit.zoom-large .knockout-match-code,
+  .bracket-map.is-fit.zoom-large .knockout-short-date {
+    font-size: 0.62rem;
   }
 
   .bracket-map.is-fit.zoom-large .knockout-team-name img {

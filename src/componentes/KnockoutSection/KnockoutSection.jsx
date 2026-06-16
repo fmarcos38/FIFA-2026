@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { formatKickoff, fromDatetimeLocalValue, toDatetimeLocalValue } from '../../helpers/dateTime'
+import { formatKickoffParts } from '../../helpers/dateTime'
 import { getFlagUrl, getMatchStatus, getMatchStatusLabel, hasMatchScore, hasMinimumMatchDurationElapsed } from '../../data/worldCupData'
 import './styles.css'
 
@@ -74,7 +74,7 @@ function MatchSlot({ isAdmin, match, index, isConnected, isFinal, results, round
   const statusLabel = getMatchStatusLabel(result, rawKickoff)
   const canFinish = hasMinimumMatchDurationElapsed(rawKickoff)
   const penalties = hasPenalties(result)
-  const kickoff = formatKickoff(rawKickoff, '')
+  const kickoffDate = formatKickoffParts(rawKickoff).date
   const isDraw =
     result?.homeGoals !== undefined &&
     result?.awayGoals !== undefined &&
@@ -87,17 +87,8 @@ function MatchSlot({ isAdmin, match, index, isConnected, isFinal, results, round
       className={`match-slot knockout-slot ${match.winner ? 'has-winner' : ''} ${isConnected ? 'has-connector' : ''} ${isFinal ? 'center-final' : ''}`}
     >
       <div className="knockout-meta">
-        <span>{match.id || `Partido ${index + 1}`}</span>
-        {isAdmin ? (
-          <input
-            className="knockout-date-input"
-            type="datetime-local"
-            value={toDatetimeLocalValue(result?.kickoff)}
-            onChange={(event) => onResultChange(match.id, { kickoff: fromDatetimeLocalValue(event.target.value) })}
-          />
-        ) : (
-          kickoff && <time className="knockout-kickoff" dateTime={rawKickoff}>{kickoff}</time>
-        )}
+        <span className="knockout-match-code">{match.id || `Partido ${index + 1}`}</span>
+        {kickoffDate && <time className="knockout-short-date" dateTime={rawKickoff}>{kickoffDate}</time>}
       </div>
       <TeamLine
         isAdmin={isAdmin}
