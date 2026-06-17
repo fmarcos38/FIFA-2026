@@ -425,7 +425,7 @@ export const knockoutRounds = [
   {
     id: 'final',
     title: 'Final',
-    matches: [{ id: 'F-1', home: { winnerOf: 'SF-1' }, away: { winnerOf: 'SF-2' }, kickoff: '2026-07-19T19:00:00.000Z' }],
+    matches: [{ id: 'FINAL-1', home: { winnerOf: 'SF-1' }, away: { winnerOf: 'SF-2' }, kickoff: '2026-07-19T19:00:00.000Z' }],
   },
 ]
 export function flattenKnockoutMatches(rounds = knockoutRounds) {
