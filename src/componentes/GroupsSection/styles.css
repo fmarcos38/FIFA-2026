@@ -261,9 +261,7 @@
   }
 
   .standing-team {
-    grid-template-columns: 22px 30px minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    row-gap: 3px;
+    grid-template-columns: 22px 30px minmax(0, 1fr) auto;
   }
 
   .standing-team small {
@@ -271,7 +269,6 @@
   }
 
   .partial-standing-badge {
-    grid-column: 3;
     justify-self: start;
     min-height: 18px;
     padding: 0 6px;
