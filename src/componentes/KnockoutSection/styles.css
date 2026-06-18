@@ -100,6 +100,8 @@
   align-items: stretch;
   gap: 10px;
   overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
   padding: 6px 2px 14px;
 }
 
@@ -130,6 +132,7 @@
 
 .round-card {
   min-width: 198px;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   overflow: visible;
@@ -750,25 +753,45 @@
       repeat(4, minmax(180px, 1fr))
       minmax(200px, 1.08fr)
       repeat(4, minmax(180px, 1fr));
-    gap: 10px;
+    gap: 12px;
+    padding: 8px 6px 16px;
+  }
+
+  .round-card {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  .knockout-slot.has-connector::before,
+  .knockout-slot.has-connector::after,
+  .side-center .knockout-slot.center-final::before,
+  .side-center .knockout-slot.center-final::after {
+    filter: drop-shadow(0 0 5px rgba(0, 255, 178, 0.5));
   }
 
   .knockout-slot.has-connector::before {
     left: -27px;
     width: 26px;
+    border-top-color: rgba(0, 255, 178, 0.82);
+    border-top-width: 3px;
   }
 
   .knockout-slot.has-connector::after {
     left: -27px;
+    border-left-color: rgba(0, 255, 178, 0.5);
+    border-left-width: 3px;
   }
 
   .side-center .knockout-slot.center-final::before {
     left: -27px;
     width: 26px;
+    border-top-color: rgba(0, 255, 178, 0.82);
+    border-top-width: 3px;
   }
 
   .side-center .knockout-slot.center-final::after {
     right: -27px;
     width: 26px;
+    border-top-color: rgba(0, 255, 178, 0.82);
+    border-top-width: 3px;
   }
 }

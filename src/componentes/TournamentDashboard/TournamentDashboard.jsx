@@ -33,10 +33,51 @@ function getUpcomingMatch(matches, results, teamName) {
 }
 
 function normalizeSeed(value) {
-  return normalizeSearch(value).replace(/a°/g, '°')
+  return normalizeSearch(value).replace(/\u00c2/g, '').replace(/a°/g, '°')
 }
 
-function getPossibleCross(seed) {
+function getSeedDetails(seed, groups) {
+  const normalizedSeed = seed.replace(/\u00c2/g, '')
+  const groupSeedMatch = normalizedSeed.match(/^(\d+)\u00b0 Grupo ([A-L])$/)
+
+  if (groupSeedMatch) {
+    const position = Number(groupSeedMatch[1])
+    const groupId = groupSeedMatch[2]
+    const group = groups.find((currentGroup) => currentGroup.id === groupId)
+    const row = group?.standings?.[position - 1]
+    const team = row?.team || group?.teams?.[position - 1]
+
+    return team ? `${team} (${position}\u00b0 puesto, Grupo ${groupId})` : seed
+  }
+
+  const bestThirdSeedMatch = normalizedSeed.match(/^Mejor 3\u00b0 ([A-L](?:\/[A-L])*)$/)
+
+  if (bestThirdSeedMatch) {
+    const groupIds = bestThirdSeedMatch[1].split('/')
+    const possibleThirds = groupIds
+      .map((groupId) => {
+        const group = groups.find((currentGroup) => currentGroup.id === groupId)
+        const row = group?.standings?.[2]
+
+        return row ? { ...row, groupId } : null
+      })
+      .filter(Boolean)
+      .sort((a, b) => {
+        if (b.points !== a.points) return b.points - a.points
+        if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference
+        if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor
+        return a.team.localeCompare(b.team)
+      })
+
+    const possibleTeam = possibleThirds[0]
+
+    return possibleTeam ? `${possibleTeam.team} (3\u00b0 puesto, Grupo ${possibleTeam.groupId})` : seed
+  }
+
+  return seed
+}
+
+function getPossibleCross(seed, groups) {
   const round32 = knockoutRounds.find((round) => round.id === 'round32')
   if (!round32 || !seed) return null
 
@@ -49,7 +90,7 @@ function getPossibleCross(seed) {
 
   const opponent = normalizeSeed(match.home.seed || '') === targetSeed ? match.away.seed : match.home.seed
 
-  return `${match.id}: vs ${opponent}`
+  return `vs ${getSeedDetails(opponent, groups)}`
 }
 
 function getTeamContext(groups, matches, results, teamName) {
@@ -62,7 +103,7 @@ function getTeamContext(groups, matches, results, teamName) {
   const position = standings.findIndex((row) => row.team === teamName) + 1
   const upcomingMatch = getUpcomingMatch(matches, results, teamName)
   const knockoutSeed = position > 0 && position <= 2 ? `${position}° Grupo ${group.id}` : null
-  const possibleCross = getPossibleCross(knockoutSeed) || (knockoutSeed ? `Clasifica como ${knockoutSeed}` : 'Debe subir posiciones')
+  const possibleCross = getPossibleCross(knockoutSeed, groups) || (knockoutSeed ? `Clasifica como ${getSeedDetails(knockoutSeed, groups)}` : 'Debe subir posiciones')
 
   return {
     group,
@@ -171,13 +212,10 @@ function TournamentDashboard({ matches, groups, results, onSelectCountry }) {
 
             <div className="favorite-team-facts">
               <span>
-                Plantel <strong>Lista por posición</strong>
-              </span>
-              <span>
-                Posible cruce <strong>{favoriteContext.possibleCross}</strong>
+                Posible cruce <span>{favoriteContext.possibleCross}</span>
               </span>
               <button type="button" onClick={() => onSelectCountry(favoriteTeam)}>
-                Ver plantel
+                Plantel
               </button>
             </div>
           </div>

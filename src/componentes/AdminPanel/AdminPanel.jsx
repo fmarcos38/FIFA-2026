@@ -4,6 +4,9 @@ import './styles.css'
 
 function AdminPanel({ groups, knockoutRounds, results, onResultChange, onResultDelete, onSyncResults, onLogout }) {
   const [syncStatus, setSyncStatus] = useState({ type: 'idle', text: '' })
+  const sortByKickoff = (a, b) =>
+    new Date(results[a.id]?.kickoff || a.kickoff).getTime() -
+    new Date(results[b.id]?.kickoff || b.kickoff).getTime()
 
   const handleSyncClick = async () => {
     setSyncStatus({ type: 'loading', text: 'Sincronizando API...' })
@@ -71,7 +74,7 @@ function AdminPanel({ groups, knockoutRounds, results, onResultChange, onResultD
           <article className="admin-group" key={group.id}>
             <h3>Grupo {group.id}</h3>
             <div className="admin-match-list">
-              {createGroupMatches(group).map((match) => {
+              {createGroupMatches(group).sort(sortByKickoff).map((match) => {
                 const result = results[match.id] || {}
 
                 return (

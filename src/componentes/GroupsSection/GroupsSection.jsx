@@ -48,6 +48,7 @@ function GroupsSection({ groups, isAdmin, results, onResultChange, onResultDelet
               <thead>
                 <tr>
                   <th className="team-heading">Equipo</th>
+                  <th>Pts</th>
                   <th>PJ</th>
                   <th>PG</th>
                   <th>PE</th>
@@ -55,7 +56,6 @@ function GroupsSection({ groups, isAdmin, results, onResultChange, onResultDelet
                   <th>GF</th>
                   <th>GC</th>
                   <th>DG</th>
-                  <th>Pts</th>
                 </tr>
               </thead>
               <tbody>
@@ -80,9 +80,11 @@ function GroupsSection({ groups, isAdmin, results, onResultChange, onResultDelet
                             </span>
                           </span>
                           <span>{row.team}</span>
+                          {row.hasPartialMatch && <span className="partial-standing-badge">Parcial</span>}
                           <small>{country.confederation}</small>
                         </button>
                       </td>
+                      <td className="points-cell">{row.points}</td>
                       <td>{row.played}</td>
                       <td>{row.won}</td>
                       <td>{row.drawn}</td>
@@ -90,7 +92,6 @@ function GroupsSection({ groups, isAdmin, results, onResultChange, onResultDelet
                       <td>{row.goalsFor}</td>
                       <td>{row.goalsAgainst}</td>
                       <td>{row.goalDifference}</td>
-                      <td className="points-cell">{row.points}</td>
                     </tr>
                   )
                 })}

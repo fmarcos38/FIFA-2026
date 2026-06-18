@@ -1,5 +1,5 @@
 export const groups = [
-  { id: 'A', teams: ['México', 'Sudáfrica', 'Corea del Sur', 'Chequia'] },
+  { id: 'A', teams: ['México', 'Sudáfrica', 'Corea del Sur', 'Rep. Checa'] },
   { id: 'B', teams: ['Canadá', 'Bosnia', 'Catar', 'Suiza'] },
   { id: 'C', teams: ['Brasil', 'Marruecos', 'Haití', 'Escocia'] },
   { id: 'D', teams: ['Estados Unidos', 'Paraguay', 'Australia', 'Turquía'] },
@@ -26,7 +26,7 @@ export const countries = {
   Colombia: { flag: '🇨🇴', confederation: 'CONMEBOL', capital: 'Bogota', coach: 'Nestor Lorenzo', players: ['Luis Diaz', 'James Rodriguez', 'Daniel Munoz', 'Jhon Arias', 'Rafael Borre'] },
   Croacia: { flag: '🇭🇷', confederation: 'UEFA', capital: 'Zagreb', coach: 'Zlatko Dalic', players: ['Luka Modric', 'Josko Gvardiol', 'Mateo Kovacic', 'Andrej Kramaric', 'Dominik Livakovic'] },
   Curazao: { flag: '🇨🇼', confederation: 'CONCACAF', capital: 'Willemstad', coach: 'Dick Advocaat', players: ['Leandro Bacuna', 'Juninho Bacuna', 'Cuco Martina', 'Eloy Room', 'Vurnon Anita'] },
-  Chequia: { flag: '🇨🇿', confederation: 'UEFA', capital: 'Prague', coach: 'Ivan Hasek', players: ['Patrik Schick', 'Tomas Soucek', 'Ladislav Krejci', 'Adam Hlozek', 'Antonin Barak'] },
+  'Rep. Checa': { flag: '🇨🇿', confederation: 'UEFA', capital: 'Prague', coach: 'Ivan Hasek', players: ['Patrik Schick', 'Tomas Soucek', 'Ladislav Krejci', 'Adam Hlozek', 'Antonin Barak'] },
   'RD Congo': { flag: '🇨🇩', confederation: 'CAF', capital: 'Kinshasa', coach: 'Sebastien Desabre', players: ['Chancel Mbemba', 'Yoane Wissa', 'Cedric Bakambu', 'Arthur Masuaku', 'Silas'] },
   Ecuador: { flag: '🇪🇨', confederation: 'CONMEBOL', capital: 'Quito', coach: 'Sebastian Beccacece', players: ['Moises Caicedo', 'Piero Hincapie', 'Pervis Estupinan', 'Kendry Paez', 'Enner Valencia'] },
   Egipto: { flag: '🇪🇬', confederation: 'CAF', capital: 'Cairo', coach: 'Hossam Hassan', players: ['Mohamed Salah', 'Omar Marmoush', 'Mostafa Mohamed', 'Trezeguet', 'Mohamed Elneny'] },
@@ -77,7 +77,7 @@ export const flagCodes = {
   Colombia: 'co',
   Croacia: 'hr',
   Curazao: 'cw',
-  Chequia: 'cz',
+  'Rep. Checa': 'cz',
   'RD Congo': 'cd',
   Ecuador: 'ec',
   Egipto: 'eg',
@@ -124,7 +124,7 @@ export const squadNameAliases = {
   'Cabo Verde': 'Cape Verde',
   Canadá: 'Canada',
   Catar: 'Qatar',
-  Chequia: 'Czechia',
+  'Rep. Checa': 'Czechia',
   'Corea del Sur': 'South Korea',
   'Costa de Marfil': 'Ivory Coast',
   Croacia: 'Croatia',
@@ -325,11 +325,13 @@ export function calculateGroupStandings(group, results) {
     const result = results[match.id]
     const homeGoals = Number(result?.homeGoals)
     const awayGoals = Number(result?.awayGoals)
+    const status = getMatchStatus(result, result?.kickoff || match.kickoff)
 
-    if (!isFinishedResult(result, result?.kickoff || match.kickoff)) return
+    if (!hasMatchScore(result)) return
 
     const home = rowsByTeam[match.home]
     const away = rowsByTeam[match.away]
+    const isPartial = status && status !== 'finished'
 
     home.played += 1
     away.played += 1
@@ -337,6 +339,11 @@ export function calculateGroupStandings(group, results) {
     home.goalsAgainst += awayGoals
     away.goalsFor += awayGoals
     away.goalsAgainst += homeGoals
+
+    if (isPartial) {
+      home.hasPartialMatch = true
+      away.hasPartialMatch = true
+    }
 
     if (homeGoals > awayGoals) {
       home.won += 1

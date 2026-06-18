@@ -24,6 +24,12 @@ function buildScoreChange(result, field, value) {
 }
 
 function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDelete, onSelectCountry }) {
+  const matches = createGroupMatches(group).sort(
+    (a, b) =>
+      new Date(results[a.id]?.kickoff || a.kickoff).getTime() -
+      new Date(results[b.id]?.kickoff || b.kickoff).getTime(),
+  )
+
   return (
     <article className="group-fixtures" id={`fixtures-${group.id}`}>
       <div className="fixtures-heading">
@@ -32,7 +38,7 @@ function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDel
       </div>
 
       <div className="fixture-list">
-        {createGroupMatches(group).map((match) => {
+        {matches.map((match) => {
           const result = results[match.id] || {}
           const kickoff = result.kickoff || match.kickoff
           const hasScore = hasMatchScore(result)

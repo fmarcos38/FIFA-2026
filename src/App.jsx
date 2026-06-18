@@ -155,6 +155,7 @@ function App() {
 
         return formatDateKey(new Date(match.kickoff)) === todayKey
       })
+      .sort((a, b) => new Date(a.kickoff).getTime() - new Date(b.kickoff).getTime())
   }, [groupMatches, results])
 
   const handleResultChange = async (matchId, result) => {
