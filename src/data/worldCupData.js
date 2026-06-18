@@ -199,7 +199,7 @@ export function hasMinimumMatchDurationElapsed(kickoff) {
   const kickoffDate = new Date(kickoff)
   if (Number.isNaN(kickoffDate.getTime())) return false
 
-  return Date.now() >= kickoffDate.getTime() + 100 * 60 * 1000
+  return Date.now() >= kickoffDate.getTime() + 125 * 60 * 1000
 }
 
 export function getMatchStatus(result, kickoff = result?.kickoff) {
