@@ -455,7 +455,78 @@ function compareThirdPlaceRows(a, b) {
   return a.team.localeCompare(b.team)
 }
 
-function resolveSeedParticipant(seed, standingsByGroup = {}) {
+function collectBestThirdRows(standingsByGroup = {}) {
+  return Object.entries(standingsByGroup)
+    .map(([groupId, standings]) => {
+      const row = standings?.[2]
+
+      return hasGroupStarted(standings) && row ? { ...row, groupId } : null
+    })
+    .filter(Boolean)
+    .sort(compareThirdPlaceRows)
+    .slice(0, 8)
+}
+
+function getBestThirdSlots(rounds = knockoutRounds) {
+  return rounds[0].matches
+    .flatMap((match) => [
+      { matchId: match.id, side: 'home', participant: match.home },
+      { matchId: match.id, side: 'away', participant: match.away },
+    ])
+    .map((slot) => {
+      const seed = slot.participant.seed
+      const bestThirdSeedMatch = seed ? getBestThirdSeedMatch(seed) : null
+
+      return bestThirdSeedMatch
+        ? {
+            ...slot,
+            seed,
+            groupIds: bestThirdSeedMatch[1].split('/'),
+          }
+        : null
+    })
+    .filter(Boolean)
+}
+
+function buildBestThirdAssignments(rounds = knockoutRounds, standingsByGroup = {}) {
+  const bestThirdRows = collectBestThirdRows(standingsByGroup)
+  const slots = getBestThirdSlots(rounds)
+    .map((slot) => ({
+      ...slot,
+      candidates: bestThirdRows.filter((row) => slot.groupIds.includes(row.groupId)),
+    }))
+    .sort((a, b) => a.candidates.length - b.candidates.length)
+
+  const assignments = {}
+  const usedGroups = new Set()
+
+  const assignSlot = (index) => {
+    if (index >= slots.length) return true
+
+    const slot = slots[index]
+    const key = `${slot.matchId}:${slot.side}`
+
+    for (const candidate of slot.candidates) {
+      if (usedGroups.has(candidate.groupId)) continue
+
+      assignments[key] = candidate.team
+      usedGroups.add(candidate.groupId)
+
+      if (assignSlot(index + 1)) return true
+
+      usedGroups.delete(candidate.groupId)
+      delete assignments[key]
+    }
+
+    return slot.candidates.length === 0 ? assignSlot(index + 1) : false
+  }
+
+  assignSlot(0)
+
+  return assignments
+}
+
+function resolveSeedParticipant(seed, standingsByGroup = {}, bestThirdAssignments = {}, slotKey = '') {
   const groupSeedMatch = getGroupSeedMatch(seed)
 
   if (groupSeedMatch) {
@@ -469,33 +540,22 @@ function resolveSeedParticipant(seed, standingsByGroup = {}) {
   const bestThirdSeedMatch = getBestThirdSeedMatch(seed)
 
   if (bestThirdSeedMatch) {
-    const groupIds = bestThirdSeedMatch[1].split('/')
-    const thirdPlacedTeams = groupIds
-      .map((groupId) => {
-        const standings = standingsByGroup[groupId] || []
-        const row = standings[2]
-
-        return hasGroupStarted(standings) && row ? { ...row, groupId } : null
-      })
-      .filter(Boolean)
-      .sort(compareThirdPlaceRows)
-
-    return thirdPlacedTeams[0]?.team || seed
+    return bestThirdAssignments[slotKey] || seed
   }
 
   return seed
 }
 
-function resolveKnockoutParticipant(participant, results, rounds, standingsByGroup) {
-  if (participant.seed) return resolveSeedParticipant(participant.seed, standingsByGroup)
+function resolveKnockoutParticipant(participant, results, rounds, standingsByGroup, bestThirdAssignments, slotKey) {
+  if (participant.seed) return resolveSeedParticipant(participant.seed, standingsByGroup, bestThirdAssignments, slotKey)
 
   const previousMatch = findKnockoutMatch(participant.winnerOf, rounds)
-  const winner = previousMatch ? getKnockoutWinner(previousMatch, results, rounds, standingsByGroup) : null
+  const winner = previousMatch ? getKnockoutWinner(previousMatch, results, rounds, standingsByGroup, bestThirdAssignments) : null
 
   return winner || `Ganador ${participant.winnerOf}`
 }
 
-export function getKnockoutWinner(match, results, rounds = knockoutRounds, standingsByGroup = {}) {
+export function getKnockoutWinner(match, results, rounds = knockoutRounds, standingsByGroup = {}, bestThirdAssignments = {}) {
   const result = results[match.id]
 
   if (!isFinishedResult(result, result?.kickoff || match.kickoff)) return null
@@ -518,25 +578,26 @@ export function getKnockoutWinner(match, results, rounds = knockoutRounds, stand
     if (!hasPenalties) return null
 
     return homePenalties > awayPenalties
-      ? resolveKnockoutParticipant(match.home, results, rounds, standingsByGroup)
-      : resolveKnockoutParticipant(match.away, results, rounds, standingsByGroup)
+      ? resolveKnockoutParticipant(match.home, results, rounds, standingsByGroup, bestThirdAssignments, `${match.id}:home`)
+      : resolveKnockoutParticipant(match.away, results, rounds, standingsByGroup, bestThirdAssignments, `${match.id}:away`)
   }
 
   return homeGoals > awayGoals
-    ? resolveKnockoutParticipant(match.home, results, rounds, standingsByGroup)
-    : resolveKnockoutParticipant(match.away, results, rounds, standingsByGroup)
+    ? resolveKnockoutParticipant(match.home, results, rounds, standingsByGroup, bestThirdAssignments, `${match.id}:home`)
+    : resolveKnockoutParticipant(match.away, results, rounds, standingsByGroup, bestThirdAssignments, `${match.id}:away`)
 }
 
 export function buildKnockoutBracket(results, rounds = knockoutRounds, groupsWithStandings = []) {
   const standingsByGroup = Object.fromEntries(groupsWithStandings.map((group) => [group.id, group.standings || []]))
+  const bestThirdAssignments = buildBestThirdAssignments(rounds, standingsByGroup)
 
   return rounds.map((round) => ({
     ...round,
     matches: round.matches.map((match) => ({
       ...match,
-      homeLabel: resolveKnockoutParticipant(match.home, results, rounds, standingsByGroup),
-      awayLabel: resolveKnockoutParticipant(match.away, results, rounds, standingsByGroup),
-      winner: getKnockoutWinner(match, results, rounds, standingsByGroup),
+      homeLabel: resolveKnockoutParticipant(match.home, results, rounds, standingsByGroup, bestThirdAssignments, `${match.id}:home`),
+      awayLabel: resolveKnockoutParticipant(match.away, results, rounds, standingsByGroup, bestThirdAssignments, `${match.id}:away`),
+      winner: getKnockoutWinner(match, results, rounds, standingsByGroup, bestThirdAssignments),
     })),
   }))
 }
