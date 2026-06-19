@@ -4,7 +4,6 @@ import {
   getMatchStatus,
   getMatchStatusLabel,
   hasMatchScore,
-  hasMinimumMatchDurationElapsed,
 } from '../../data/worldCupData'
 import GroupsIcon from '@mui/icons-material/Groups'
 import { formatKickoff, fromDatetimeLocalValue, toDatetimeLocalValue } from '../../helpers/dateTime'
@@ -44,7 +43,6 @@ function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDel
           const hasScore = hasMatchScore(result)
           const status = getMatchStatus(result, kickoff)
           const statusLabel = getMatchStatusLabel(result, kickoff)
-          const canFinish = hasMinimumMatchDurationElapsed(kickoff)
 
           return (
             <article className={`fixture-row ${hasScore ? 'has-score' : ''} status-${status || 'pending'}`} key={match.id}>
@@ -135,7 +133,7 @@ function GroupFixtureList({ group, isAdmin, results, onResultChange, onResultDel
                   <option value="partial">Parcial</option>
                   <option value="extraTime">Alargue</option>
                   <option value="penalties">Penales</option>
-                  <option value="finished" disabled={!canFinish}>Finalizado</option>
+                  <option value="finished">Finalizado</option>
                 </select>
               )}
 

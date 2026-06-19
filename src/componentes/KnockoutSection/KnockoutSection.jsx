@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { formatKickoffParts } from '../../helpers/dateTime'
-import { getFlagUrl, getMatchStatus, getMatchStatusLabel, hasMatchScore, hasMinimumMatchDurationElapsed } from '../../data/worldCupData'
+import { getFlagUrl, getMatchStatus, getMatchStatusLabel, hasMatchScore } from '../../data/worldCupData'
 import './styles.css'
 
 function buildScoreChange(result, field, value) {
@@ -72,7 +72,6 @@ function MatchSlot({ isAdmin, match, index, isConnected, isFinal, results, round
   const rawKickoff = result?.kickoff || match.kickoff
   const status = getMatchStatus(result, rawKickoff)
   const statusLabel = getMatchStatusLabel(result, rawKickoff)
-  const canFinish = hasMinimumMatchDurationElapsed(rawKickoff)
   const penalties = hasPenalties(result)
   const kickoffDate = formatKickoffParts(rawKickoff).date
   const isDraw =
@@ -116,7 +115,7 @@ function MatchSlot({ isAdmin, match, index, isConnected, isFinal, results, round
           <option value="partial">Parcial</option>
           <option value="extraTime">Alargue</option>
           <option value="penalties">Penales</option>
-          <option value="finished" disabled={!canFinish}>Finalizado</option>
+          <option value="finished">Finalizado</option>
         </select>
       )}
       {!isAdmin && statusLabel && <span className={`knockout-status status-${status}`}>{statusLabel}</span>}
