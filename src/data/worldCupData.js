@@ -204,8 +204,7 @@ export function hasMinimumMatchDurationElapsed(kickoff) {
 
 export function getMatchStatus(result, kickoff = result?.kickoff) {
   if (!hasMatchScore(result)) return ''
-  if (['partial', 'extraTime', 'penalties'].includes(result.status)) return result.status
-  if (result.status === 'finished' && hasMinimumMatchDurationElapsed(kickoff)) return 'finished'
+  if (['partial', 'extraTime', 'penalties', 'finished'].includes(result.status)) return result.status
   if (hasMinimumMatchDurationElapsed(kickoff)) return 'finished'
   return 'partial'
 }
