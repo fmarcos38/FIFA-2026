@@ -1,4 +1,3 @@
-import GroupsIcon from '@mui/icons-material/Groups'
 import { getFlagUrl } from '../../data/worldCupData'
 import './styles.css'
 
@@ -46,11 +45,6 @@ function PopUpMejoresTerceros({ open, rows = [], onClose }) {
                         </span>
                         <span className="thirds-name">{row.team}</span>
                         {row.hasPartialMatch && <span className="thirds-partial">Parcial</span>}
-                        {index < 8 && (
-                          <span className="thirds-qualified" title="Clasifica a ronda de 32">
-                            <GroupsIcon fontSize="inherit" />
-                          </span>
-                        )}
                       </div>
                     </td>
                     <td>{row.groupId}</td>

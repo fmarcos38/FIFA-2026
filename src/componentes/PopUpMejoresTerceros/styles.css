@@ -100,7 +100,7 @@
 .thirds-team {
   min-height: 44px;
   display: grid;
-  grid-template-columns: 26px 32px minmax(0, 1fr) auto auto;
+  grid-template-columns: 26px 32px minmax(0, 1fr) auto;
   align-items: center;
   gap: 8px;
   color: var(--text-strong);
@@ -155,18 +155,6 @@
   font-size: 0.6rem;
   font-weight: 700;
   text-transform: uppercase;
-}
-
-.thirds-qualified {
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  color: #04120d;
-  background: var(--fluo);
-  font-size: 0.82rem;
 }
 
 .thirds-points {
