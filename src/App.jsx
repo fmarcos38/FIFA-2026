@@ -6,7 +6,7 @@ import Hero from './componentes/Hero/Hero'
 import KnockoutSection from './componentes/KnockoutSection/KnockoutSection'
 import LoginPanel from './componentes/LoginPanel/LoginPanel'
 import TournamentDashboard from './componentes/TournamentDashboard/TournamentDashboard'
-import { buildKnockoutBracket, calculateGroupStandings, countries, createGroupMatches, groups, knockoutRounds } from './data/worldCupData'
+import { buildKnockoutBracket, calculateGroupStandings, collectBestThirdRows, countries, createGroupMatches, groups, knockoutRounds } from './data/worldCupData'
 import { formatDateKey } from './helpers/dateTime'
 import { clearAdminToken, deleteResult, getApiBaseUrl, getResults, saveResult, setAdminToken } from './services/api'
 import './App.css'
@@ -48,6 +48,7 @@ function App() {
   const [selectedCountry, setSelectedCountry] = useState(null)
   const [loginOpen, setLoginOpen] = useState(false)
   const [partidosHoy, setPartidosHoy] = useState(false)
+  const [mejoresTercerosOpen, setMejoresTercerosOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem(ADMIN_STORAGE_KEY) === 'true')
   const [saveStatus, setSaveStatus] = useState({
     type: getApiBaseUrl() ? 'idle' : 'offline',
@@ -131,6 +132,12 @@ function App() {
     () => buildKnockoutBracket(results, knockoutRounds, groupsWithStandings),
     [groupsWithStandings, results],
   )
+  const bestThirdRows = useMemo(() => {
+    const standingsByGroup = Object.fromEntries(groupsWithStandings.map((group) => [group.id, group.standings || []]))
+
+    return collectBestThirdRows(standingsByGroup, 12)
+  }, [groupsWithStandings])
+
   const groupMatches = useMemo(
     () =>
       groups.flatMap((group) =>
@@ -244,6 +251,10 @@ function App() {
         partidosHoy={partidosHoy}
         todayMatches={todayMatches}
         onClosePartidosHoy={() => setPartidosHoy(false)}
+        mejoresTercerosOpen={mejoresTercerosOpen}
+        mejoresTerceros={bestThirdRows}
+        onOpenMejoresTerceros={() => setMejoresTercerosOpen(true)}
+        onCloseMejoresTerceros={() => setMejoresTercerosOpen(false)}
         saveStatus={saveStatus}
       />
       <main>

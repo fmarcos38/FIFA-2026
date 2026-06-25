@@ -1,5 +1,6 @@
 import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
+import PopUpMejoresTerceros from '../PopUpMejoresTerceros/PopUpMejoresTerceros'
 import PopUpPartidosDeHoy from '../PopUpPartidosDeHoy/PopUpPartidosDeHoy'
 import './styles.css'
 
@@ -11,6 +12,10 @@ function Hero({
   partidosHoy,
   todayMatches,
   onClosePartidosHoy,
+  mejoresTercerosOpen,
+  mejoresTerceros,
+  onOpenMejoresTerceros,
+  onCloseMejoresTerceros,
   saveStatus,
 }) {
   return (
@@ -46,6 +51,7 @@ function Hero({
               <a href="#grupos" className="primary-action">Ver grupos</a>
               <a href="#eliminatorias" className="ghost-action">Ver llaves</a>
               <button className="primary-action" type="button" onClick={partidosDeHoy}>Partidos de hoy</button>
+              <button className="ghost-action" type="button" onClick={onOpenMejoresTerceros}>Mejores terceros</button>
             </div>
           </div>
         </div>
@@ -62,6 +68,7 @@ function Hero({
         )}
       </div>
       <PopUpPartidosDeHoy open={partidosHoy} matches={todayMatches} onClose={onClosePartidosHoy} />
+      <PopUpMejoresTerceros open={mejoresTercerosOpen} rows={mejoresTerceros} onClose={onCloseMejoresTerceros} />
     </section>
   )
 }

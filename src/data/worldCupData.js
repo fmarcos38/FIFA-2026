@@ -461,7 +461,7 @@ function compareThirdPlaceRows(a, b) {
   return a.team.localeCompare(b.team)
 }
 
-function collectBestThirdRows(standingsByGroup = {}) {
+export function collectBestThirdRows(standingsByGroup = {}, limit = 8) {
   return Object.entries(standingsByGroup)
     .map(([groupId, standings]) => {
       const row = standings?.[2]
@@ -470,7 +470,7 @@ function collectBestThirdRows(standingsByGroup = {}) {
     })
     .filter(Boolean)
     .sort(compareThirdPlaceRows)
-    .slice(0, 8)
+    .slice(0, limit)
 }
 
 function getBestThirdSlots(rounds = knockoutRounds) {
