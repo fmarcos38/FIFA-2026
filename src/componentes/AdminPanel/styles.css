@@ -162,6 +162,48 @@
   text-transform: uppercase;
 }
 
+.admin-knockout-status {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(130px, 180px) 96px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 94px 10px 12px;
+}
+
+.admin-knockout-status span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.admin-knockout-status select {
+  min-height: 34px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--text-strong);
+  background: rgba(0, 0, 0, 0.28);
+  font: inherit;
+  font-size: 0.78rem;
+}
+
+.finish-result {
+  min-height: 34px;
+  border: 1px solid rgba(0, 255, 178, 0.45);
+  border-radius: 6px;
+  color: var(--text-strong);
+  background: rgba(0, 255, 178, 0.1);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.finish-result:hover {
+  border-color: var(--fluo);
+  background: rgba(0, 255, 178, 0.18);
+}
+
 .admin-penalties input {
   width: 52px;
   height: 34px;
@@ -222,6 +264,11 @@
 
   .admin-penalties {
     grid-template-columns: 1fr 44px 10px 44px;
+    padding: 0 8px 10px;
+  }
+
+  .admin-knockout-status {
+    grid-template-columns: 1fr;
     padding: 0 8px 10px;
   }
 

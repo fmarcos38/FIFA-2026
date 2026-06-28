@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { createGroupMatches, getFlagUrl } from '../../data/worldCupData'
+import { createGroupMatches, getFlagUrl, getMatchStatus } from '../../data/worldCupData'
 import './styles.css'
 
 function AdminPanel({ groups, knockoutRounds, results, onResultChange, onResultDelete, onSyncResults, onLogout }) {
@@ -50,6 +50,19 @@ function AdminPanel({ groups, knockoutRounds, results, onResultChange, onResultD
     result.homeGoals !== '' &&
     result.awayGoals !== '' &&
     Number(result.homeGoals) === Number(result.awayGoals)
+
+  const hasCompleteScore = (result) =>
+    result?.homeGoals !== undefined &&
+    result?.awayGoals !== undefined &&
+    result.homeGoals !== '' &&
+    result.awayGoals !== ''
+
+  const handleStatusChange = (match, status) => {
+    onResultChange(match.id, {
+      ...results[match.id],
+      status,
+    })
+  }
 
   return (
     <section className="admin-panel">
@@ -131,6 +144,8 @@ function AdminPanel({ groups, knockoutRounds, results, onResultChange, onResultD
               {round.matches.map((match) => {
                 const result = results[match.id] || {}
                 const showPenalties = isKnockoutDraw(result)
+                const canEditStatus = hasCompleteScore(result)
+                const status = getMatchStatus(result, result.kickoff || match.kickoff)
 
                 return (
                   <div className="admin-knockout-match" key={match.id}>
@@ -161,6 +176,28 @@ function AdminPanel({ groups, knockoutRounds, results, onResultChange, onResultD
                         Limpiar
                       </button>
                     </div>
+                    {canEditStatus && (
+                      <div className="admin-knockout-status">
+                        <span>Estado</span>
+                        <select
+                          aria-label={`Estado de ${match.homeLabel} contra ${match.awayLabel}`}
+                          value={status || 'partial'}
+                          onChange={(event) => handleStatusChange(match, event.target.value)}
+                        >
+                          <option value="partial">Parcial</option>
+                          <option value="extraTime">Alargue</option>
+                          <option value="penalties">Penales</option>
+                          <option value="finished">Finalizado</option>
+                        </select>
+                        <button
+                          className="finish-result"
+                          type="button"
+                          onClick={() => handleStatusChange(match, 'finished')}
+                        >
+                          Finalizar
+                        </button>
+                      </div>
+                    )}
                     {showPenalties && (
                       <div className="admin-penalties">
                         <span>Penales</span>
