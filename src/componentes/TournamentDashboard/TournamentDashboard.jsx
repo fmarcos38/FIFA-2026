@@ -32,6 +32,12 @@ function getUpcomingMatch(matches, results, teamName) {
     .sort((a, b) => new Date(results[a.id]?.kickoff || a.kickoff) - new Date(results[b.id]?.kickoff || b.kickoff))[0]
 }
 
+function hasGroupCompleted(group) {
+  const standings = group?.standings || []
+
+  return standings.length > 0 && standings.every((row) => row.played === 3 && !row.hasPartialMatch)
+}
+
 function normalizeSeed(value) {
   return normalizeSearch(value).replace(/\u00c2/g, '').replace(/a°/g, '°')
 }
@@ -59,7 +65,7 @@ function getSeedDetails(seed, groups) {
         const group = groups.find((currentGroup) => currentGroup.id === groupId)
         const row = group?.standings?.[2]
 
-        return row ? { ...row, groupId } : null
+        return hasGroupCompleted(group) && row ? { ...row, groupId } : null
       })
       .filter(Boolean)
       .sort((a, b) => {

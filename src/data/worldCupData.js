@@ -454,6 +454,10 @@ function hasGroupStarted(standings = []) {
   return standings.some((row) => row.played > 0)
 }
 
+function hasGroupCompleted(standings = []) {
+  return standings.length > 0 && standings.every((row) => row.played === 3 && !row.hasPartialMatch)
+}
+
 function compareThirdPlaceRows(a, b) {
   if (b.points !== a.points) return b.points - a.points
   if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference
@@ -466,7 +470,7 @@ export function collectBestThirdRows(standingsByGroup = {}, limit = 8) {
     .map(([groupId, standings]) => {
       const row = standings?.[2]
 
-      return hasGroupStarted(standings) && row ? { ...row, groupId } : null
+      return hasGroupCompleted(standings) && row ? { ...row, groupId } : null
     })
     .filter(Boolean)
     .sort(compareThirdPlaceRows)
