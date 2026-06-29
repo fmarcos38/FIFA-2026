@@ -465,6 +465,27 @@ function compareThirdPlaceRows(a, b) {
   return a.team.localeCompare(b.team)
 }
 
+const bestThirdGroupAssignmentsByQualifiedGroups = {
+  'B/D/E/F/I/J/K/L': {
+    'R32-2:away': 'D',
+    'R32-5:away': 'F',
+    'R32-9:away': 'B',
+    'R32-10:away': 'I',
+    'R32-7:away': 'E',
+    'R32-8:away': 'K',
+    'R32-13:away': 'J',
+    'R32-15:away': 'L',
+  },
+}
+
+function getQualifiedThirdGroupKey(bestThirdRows = []) {
+  return bestThirdRows.map((row) => row.groupId).sort().join('/')
+}
+
+function getBestThirdGroupAssignments(bestThirdRows = []) {
+  return bestThirdGroupAssignmentsByQualifiedGroups[getQualifiedThirdGroupKey(bestThirdRows)] || null
+}
+
 export function collectBestThirdRows(standingsByGroup = {}, limit = 8) {
   return Object.entries(standingsByGroup)
     .map(([groupId, standings]) => {
@@ -500,6 +521,18 @@ function getBestThirdSlots(rounds = knockoutRounds) {
 
 function buildBestThirdAssignments(rounds = knockoutRounds, standingsByGroup = {}) {
   const bestThirdRows = collectBestThirdRows(standingsByGroup)
+  const officialGroupAssignments = getBestThirdGroupAssignments(bestThirdRows)
+
+  if (officialGroupAssignments) {
+    const rowsByGroup = Object.fromEntries(bestThirdRows.map((row) => [row.groupId, row]))
+
+    return Object.fromEntries(
+      Object.entries(officialGroupAssignments)
+        .map(([slotKey, groupId]) => [slotKey, rowsByGroup[groupId]?.team])
+        .filter(([, team]) => Boolean(team)),
+    )
+  }
+
   const slots = getBestThirdSlots(rounds)
     .map((slot) => ({
       ...slot,
@@ -534,6 +567,20 @@ function buildBestThirdAssignments(rounds = knockoutRounds, standingsByGroup = {
   assignSlot(0)
 
   return assignments
+}
+
+export function resolveBestThirdSeedDetail(seed, groupsWithStandings = [], slotKey = '') {
+  const bestThirdSeedMatch = getBestThirdSeedMatch(seed)
+
+  if (!bestThirdSeedMatch) return seed
+
+  const standingsByGroup = Object.fromEntries(groupsWithStandings.map((group) => [group.id, group.standings || []]))
+  const bestThirdRows = collectBestThirdRows(standingsByGroup)
+  const officialGroupAssignments = getBestThirdGroupAssignments(bestThirdRows)
+  const assignedGroupId = officialGroupAssignments?.[slotKey]
+  const assignedRow = assignedGroupId ? bestThirdRows.find((row) => row.groupId === assignedGroupId) : null
+
+  return assignedRow ? `${assignedRow.team} (3° puesto, Grupo ${assignedGroupId})` : seed
 }
 
 function resolveSeedParticipant(seed, standingsByGroup = {}, bestThirdAssignments = {}, slotKey = '') {

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { addDays, formatDateKey } from '../../helpers/dateTime'
-import { getFlagUrl, knockoutRounds } from '../../data/worldCupData'
+import { getFlagUrl, knockoutRounds, resolveBestThirdSeedDetail } from '../../data/worldCupData'
 import MatchCard from '../MatchCard/MatchCard'
 import './styles.css'
 
@@ -94,9 +94,14 @@ function getPossibleCross(seed, groups) {
 
   if (!match) return null
 
-  const opponent = normalizeSeed(match.home.seed || '') === targetSeed ? match.away.seed : match.home.seed
+  const isHomeSeed = normalizeSeed(match.home.seed || '') === targetSeed
+  const opponent = isHomeSeed ? match.away.seed : match.home.seed
+  const opponentSide = isHomeSeed ? 'away' : 'home'
+  const opponentDetail = opponent?.includes('Mejor 3')
+    ? resolveBestThirdSeedDetail(opponent, groups, `${match.id}:${opponentSide}`)
+    : getSeedDetails(opponent, groups)
 
-  return `vs ${getSeedDetails(opponent, groups)}`
+  return `vs ${opponentDetail}`
 }
 
 function getTeamContext(groups, matches, results, teamName) {
