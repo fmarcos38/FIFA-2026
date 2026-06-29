@@ -149,8 +149,7 @@ function App() {
       ),
     [results],
   )
-  const todayMatches = useMemo(() => {
-    const todayKey = formatDateKey(new Date())
+  const scheduleMatches = useMemo(() => {
     const knockoutMatches = flattenKnockoutMatches(knockoutBracket).map((match) => ({
       ...match,
       home: match.homeLabel,
@@ -160,6 +159,12 @@ function App() {
     }))
 
     return [...groupMatches, ...knockoutMatches]
+  }, [groupMatches, knockoutBracket, results])
+
+  const todayMatches = useMemo(() => {
+    const todayKey = formatDateKey(new Date())
+
+    return scheduleMatches
       .map((match) => ({
         ...match,
         result: results[match.id] || {},
@@ -170,7 +175,7 @@ function App() {
         return formatDateKey(new Date(match.kickoff)) === todayKey
       })
       .sort((a, b) => new Date(a.kickoff).getTime() - new Date(b.kickoff).getTime())
-  }, [groupMatches, knockoutBracket, results])
+  }, [results, scheduleMatches])
 
   const handleResultChange = async (matchId, result) => {
     const previousResults = results
@@ -266,7 +271,7 @@ function App() {
       />
       <main>
         <TournamentDashboard
-          matches={groupMatches}
+          matches={scheduleMatches}
           groups={groupsWithStandings}
           results={results}
           onSelectCountry={setSelectedCountry}
