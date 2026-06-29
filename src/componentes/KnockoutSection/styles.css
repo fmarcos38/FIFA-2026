@@ -575,7 +575,6 @@
   .bracket-map.is-fit .knockout-date-input,
   .bracket-map.is-fit .knockout-kickoff,
   .bracket-map.is-fit .knockout-clear,
-  .bracket-map.is-fit .knockout-status-select,
   .bracket-map.is-fit .knockout-penalty-editor {
     display: none;
   }
