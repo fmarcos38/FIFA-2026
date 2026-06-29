@@ -6,7 +6,7 @@ import Hero from './componentes/Hero/Hero'
 import KnockoutSection from './componentes/KnockoutSection/KnockoutSection'
 import LoginPanel from './componentes/LoginPanel/LoginPanel'
 import TournamentDashboard from './componentes/TournamentDashboard/TournamentDashboard'
-import { buildKnockoutBracket, calculateGroupStandings, collectBestThirdRows, countries, createGroupMatches, groups, knockoutRounds } from './data/worldCupData'
+import { buildKnockoutBracket, calculateGroupStandings, collectBestThirdRows, countries, createGroupMatches, flattenKnockoutMatches, groups, knockoutRounds } from './data/worldCupData'
 import { formatDateKey } from './helpers/dateTime'
 import { clearAdminToken, deleteResult, getApiBaseUrl, getResults, saveResult, setAdminToken } from './services/api'
 import './App.css'
@@ -151,8 +151,12 @@ function App() {
   )
   const todayMatches = useMemo(() => {
     const todayKey = formatDateKey(new Date())
+    const knockoutMatches = flattenKnockoutMatches(knockoutBracket).map((match) => ({
+      ...match,
+      kickoff: results[match.id]?.kickoff || match.kickoff,
+    }))
 
-    return groupMatches
+    return [...groupMatches, ...knockoutMatches]
       .map((match) => ({
         ...match,
         result: results[match.id] || {},
@@ -163,7 +167,7 @@ function App() {
         return formatDateKey(new Date(match.kickoff)) === todayKey
       })
       .sort((a, b) => new Date(a.kickoff).getTime() - new Date(b.kickoff).getTime())
-  }, [groupMatches, results])
+  }, [groupMatches, knockoutBracket, results])
 
   const handleResultChange = async (matchId, result) => {
     const previousResults = results
