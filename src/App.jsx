@@ -153,6 +153,9 @@ function App() {
     const todayKey = formatDateKey(new Date())
     const knockoutMatches = flattenKnockoutMatches(knockoutBracket).map((match) => ({
       ...match,
+      home: match.homeLabel,
+      away: match.awayLabel,
+      groupName: match.roundTitle,
       kickoff: results[match.id]?.kickoff || match.kickoff,
     }))
 
