@@ -179,23 +179,34 @@ function App() {
 
   const handleResultChange = async (matchId, result) => {
     const previousResults = results
+    const nextMatchResult = {
+      ...results[matchId],
+      ...result,
+    }
 
     setResults((currentResults) => ({
       ...currentResults,
-      [matchId]: {
-        ...currentResults[matchId],
-        ...result,
-      },
+      [matchId]: nextMatchResult,
     }))
 
     const editsGoals = result.homeGoals !== undefined || result.awayGoals !== undefined
-    const nextHomeGoals = result.homeGoals
-    const nextAwayGoals = result.awayGoals
+    const nextHomeGoals = nextMatchResult.homeGoals
+    const nextAwayGoals = nextMatchResult.awayGoals
     const hasPartialScore =
       editsGoals &&
       ((nextHomeGoals === undefined || nextHomeGoals === '') || (nextAwayGoals === undefined || nextAwayGoals === ''))
+    const editsPenalties = result.homePenalties !== undefined || result.awayPenalties !== undefined
+    const hasPartialPenalties =
+      editsPenalties &&
+      nextHomeGoals !== undefined &&
+      nextAwayGoals !== undefined &&
+      nextHomeGoals !== '' &&
+      nextAwayGoals !== '' &&
+      Number(nextHomeGoals) === Number(nextAwayGoals) &&
+      ((nextMatchResult.homePenalties === undefined || nextMatchResult.homePenalties === '') ||
+        (nextMatchResult.awayPenalties === undefined || nextMatchResult.awayPenalties === ''))
 
-    if (hasPartialScore) {
+    if (hasPartialScore || hasPartialPenalties) {
       setSaveStatus({ type: 'idle', text: '' })
       return
     }
@@ -207,7 +218,7 @@ function App() {
 
     try {
       setSaveStatus({ type: 'saving', text: 'Guardando...' })
-      const data = await saveResult(matchId, result)
+      const data = await saveResult(matchId, nextMatchResult)
 
       if (data.results) {
         setResults(data.results)

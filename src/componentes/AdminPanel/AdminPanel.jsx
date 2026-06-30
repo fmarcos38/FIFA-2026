@@ -149,23 +149,46 @@ function AdminPanel({ groups, knockoutRounds, results, onResultChange, onResultD
 
                 return (
                   <div className="admin-knockout-match" key={match.id}>
-                    <div className="admin-match knockout-admin-match">
+                    <div className={`admin-match knockout-admin-match ${showPenalties ? 'has-penalties' : ''}`}>
                       <span className="admin-team text-only">{match.homeLabel}</span>
-                      <input
-                        aria-label={`Goles de ${match.homeLabel}`}
-                        min="0"
-                        type="number"
-                        value={result.homeGoals ?? ''}
-                        onChange={(event) => handleGoalChange(match.id, 'homeGoals', event.target.value)}
-                      />
-                      <span className="match-separator">-</span>
-                      <input
-                        aria-label={`Goles de ${match.awayLabel}`}
-                        min="0"
-                        type="number"
-                        value={result.awayGoals ?? ''}
-                        onChange={(event) => handleGoalChange(match.id, 'awayGoals', event.target.value)}
-                      />
+                      <div className="admin-score-editor">
+                        <input
+                          aria-label={`Goles de ${match.homeLabel}`}
+                          min="0"
+                          type="number"
+                          value={result.homeGoals ?? ''}
+                          onChange={(event) => handleGoalChange(match.id, 'homeGoals', event.target.value)}
+                        />
+                        <span className="match-separator">-</span>
+                        <input
+                          aria-label={`Goles de ${match.awayLabel}`}
+                          min="0"
+                          type="number"
+                          value={result.awayGoals ?? ''}
+                          onChange={(event) => handleGoalChange(match.id, 'awayGoals', event.target.value)}
+                        />
+                        {showPenalties && (
+                          <div className="admin-inline-penalties" aria-label="Resultado por penales">
+                            <span>(</span>
+                            <input
+                              aria-label={`Penales de ${match.homeLabel}`}
+                              min="0"
+                              type="number"
+                              value={result.homePenalties ?? ''}
+                              onChange={(event) => handleGoalChange(match.id, 'homePenalties', event.target.value)}
+                            />
+                            <span className="match-separator">-</span>
+                            <input
+                              aria-label={`Penales de ${match.awayLabel}`}
+                              min="0"
+                              type="number"
+                              value={result.awayPenalties ?? ''}
+                              onChange={(event) => handleGoalChange(match.id, 'awayPenalties', event.target.value)}
+                            />
+                            <span>p)</span>
+                          </div>
+                        )}
+                      </div>
                       <span className="admin-team away text-only">{match.awayLabel}</span>
                       <button
                         className="clear-result"
@@ -196,26 +219,6 @@ function AdminPanel({ groups, knockoutRounds, results, onResultChange, onResultD
                         >
                           Finalizar
                         </button>
-                      </div>
-                    )}
-                    {showPenalties && (
-                      <div className="admin-penalties">
-                        <span>Penales</span>
-                        <input
-                          aria-label={`Penales de ${match.homeLabel}`}
-                          min="0"
-                          type="number"
-                          value={result.homePenalties ?? ''}
-                          onChange={(event) => handleGoalChange(match.id, 'homePenalties', event.target.value)}
-                        />
-                        <span className="match-separator">-</span>
-                        <input
-                          aria-label={`Penales de ${match.awayLabel}`}
-                          min="0"
-                          type="number"
-                          value={result.awayPenalties ?? ''}
-                          onChange={(event) => handleGoalChange(match.id, 'awayPenalties', event.target.value)}
-                        />
                       </div>
                     )}
                   </div>

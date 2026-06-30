@@ -17,6 +17,15 @@ function buildScoreChange(result, field, value) {
   return nextResult
 }
 
+function buildPenaltyChange(result, field, value) {
+  const otherField = field === 'homePenalties' ? 'awayPenalties' : 'homePenalties'
+
+  return {
+    [field]: value,
+    [otherField]: result?.[otherField] ?? '',
+  }
+}
+
 function hasPenalties(result) {
   return (
     result?.homePenalties !== undefined &&
@@ -47,7 +56,7 @@ function splitRound(round) {
   }
 }
 
-function TeamLine({ isAdmin, label, score, hasScore, inputLabel, onScoreChange }) {
+function TeamLine({ isAdmin, label, score, penalty, showPenalty, hasScore, inputLabel, penaltyLabel, onScoreChange, onPenaltyChange }) {
   const isResolved = isResolvedParticipant(label)
   const flagUrl = isResolved ? getFlagUrl(label) : ''
 
@@ -58,9 +67,24 @@ function TeamLine({ isAdmin, label, score, hasScore, inputLabel, onScoreChange }
         <strong>{label}</strong>
       </span>
       {isAdmin ? (
-        <input aria-label={inputLabel} min="0" type="number" value={score ?? ''} onChange={onScoreChange} />
+        <span className={`knockout-score-cell ${showPenalty ? 'has-penalty' : ''}`}>
+          <input aria-label={inputLabel} min="0" type="number" value={score ?? ''} onChange={onScoreChange} />
+          {showPenalty && (
+            <input
+              className="knockout-penalty-input"
+              aria-label={penaltyLabel}
+              min="0"
+              type="number"
+              value={penalty ?? ''}
+              onChange={onPenaltyChange}
+            />
+          )}
+        </span>
       ) : (
-        <em>{hasScore ? score : '-'}</em>
+        <em className={`knockout-score-cell ${showPenalty ? 'has-penalty' : ''}`}>
+          <span>{hasScore ? score : '-'}</span>
+          {showPenalty && <small>{penalty}</small>}
+        </em>
       )}
     </div>
   )
@@ -93,17 +117,25 @@ function MatchSlot({ isAdmin, match, index, isConnected, isFinal, results, round
         isAdmin={isAdmin}
         label={match.homeLabel}
         score={result?.homeGoals}
+        penalty={result?.homePenalties}
+        showPenalty={isAdmin ? isDraw : penalties}
         hasScore={hasScore}
         inputLabel={`Goles de ${match.homeLabel}`}
+        penaltyLabel={`Penales de ${match.homeLabel}`}
         onScoreChange={(event) => onResultChange(match.id, buildScoreChange(result, 'homeGoals', event.target.value))}
+        onPenaltyChange={(event) => onResultChange(match.id, buildPenaltyChange(result, 'homePenalties', event.target.value))}
       />
       <TeamLine
         isAdmin={isAdmin}
         label={match.awayLabel}
         score={result?.awayGoals}
+        penalty={result?.awayPenalties}
+        showPenalty={isAdmin ? isDraw : penalties}
         hasScore={hasScore}
         inputLabel={`Goles de ${match.awayLabel}`}
+        penaltyLabel={`Penales de ${match.awayLabel}`}
         onScoreChange={(event) => onResultChange(match.id, buildScoreChange(result, 'awayGoals', event.target.value))}
+        onPenaltyChange={(event) => onResultChange(match.id, buildPenaltyChange(result, 'awayPenalties', event.target.value))}
       />
       {isAdmin && hasScore && (
         <select
@@ -119,34 +151,7 @@ function MatchSlot({ isAdmin, match, index, isConnected, isFinal, results, round
         </select>
       )}
       {!isAdmin && statusLabel && <span className={`knockout-status status-${status}`}>{statusLabel}</span>}
-      {isAdmin && isDraw && (
-        <div className="knockout-penalty-editor">
-          <span>Penales</span>
-          <input
-            aria-label={`Penales de ${match.homeLabel}`}
-            min="0"
-            type="number"
-            value={result?.homePenalties ?? ''}
-            onChange={(event) => onResultChange(match.id, { homePenalties: event.target.value })}
-          />
-          <strong>-</strong>
-          <input
-            aria-label={`Penales de ${match.awayLabel}`}
-            min="0"
-            type="number"
-            value={result?.awayPenalties ?? ''}
-            onChange={(event) => onResultChange(match.id, { awayPenalties: event.target.value })}
-          />
-        </div>
-      )}
-      {!isAdmin && penalties && (
-        <div className="penalty-line">
-          Penales: <strong>{result.homePenalties}</strong> - <strong>{result.awayPenalties}</strong>
-        </div>
-      )}
-      <small className="knockout-path">
-        {match.winner ? `Avanza: ${match.winner}` : roundIndex === rounds.length - 1 ? 'Define el campeon' : `Ganador hacia ${rounds[roundIndex + 1]?.title || 'siguiente ronda'}`}
-      </small>
+      {!isAdmin && penalties && <div className="penalty-line">Definido por penales</div>}
       {isAdmin && (
         <button className="knockout-clear" type="button" onClick={() => onResultDelete(match.id)}>
           Limpiar

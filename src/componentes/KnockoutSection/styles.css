@@ -88,15 +88,15 @@
 .bracket-map {
   display: grid;
   grid-template-columns:
-    minmax(198px, 1fr)
-    minmax(198px, 1fr)
-    minmax(198px, 1fr)
-    minmax(198px, 1fr)
-    minmax(220px, 1.08fr)
-    minmax(198px, 1fr)
-    minmax(198px, 1fr)
-    minmax(198px, 1fr)
-    minmax(198px, 1fr);
+    minmax(205px, 1fr)
+    minmax(205px, 1fr)
+    minmax(205px, 1fr)
+    minmax(205px, 1fr)
+    minmax(225px, 1.08fr)
+    minmax(205px, 1fr)
+    minmax(205px, 1fr)
+    minmax(205px, 1fr)
+    minmax(205px, 1fr);
   align-items: stretch;
   gap: 10px;
   overflow-x: auto;
@@ -131,7 +131,7 @@
 }
 
 .round-card {
-  min-width: 198px;
+  min-width: 205px;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -153,7 +153,7 @@
 }
 
 .side-center {
-  min-width: 220px;
+  min-width: 225px;
   align-self: center;
   border-color: rgba(0, 255, 178, 0.42);
   box-shadow: 0 24px 90px rgba(0, 255, 178, 0.08), 0 24px 80px rgba(0, 0, 0, 0.28);
@@ -306,12 +306,12 @@
 }
 
 .knockout-team-line {
-  min-height: 27px;
+  min-height: 28px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 25px;
+  grid-template-columns: minmax(0, 1fr) 72px;
   align-items: center;
   gap: 5px;
-  padding: 0 6px;
+  padding: 0 5px;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.035);
@@ -357,9 +357,47 @@
   text-align: right;
 }
 
-.knockout-team-line input,
-.knockout-penalty-editor input {
-  width: 28px;
+.knockout-score-cell {
+  min-width: 72px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.knockout-score-cell.has-penalty::before {
+  content: "(";
+  order: 2;
+  color: var(--muted);
+  font-size: 0.58rem;
+}
+
+.knockout-score-cell.has-penalty::after {
+  content: ")";
+  order: 4;
+  color: var(--muted);
+  font-size: 0.58rem;
+}
+
+.knockout-score-cell > input,
+.knockout-score-cell > span {
+  order: 1;
+}
+
+.knockout-score-cell > small,
+.knockout-score-cell > .knockout-penalty-input {
+  order: 3;
+}
+
+.knockout-score-cell small {
+  color: var(--fluo);
+  font-size: 0.64rem;
+  font-weight: 400;
+}
+
+.knockout-team-line input {
+  width: 30px;
   height: 24px;
   border: 1px solid var(--line-strong);
   border-radius: 5px;
@@ -368,6 +406,10 @@
   font: inherit;
   font-weight: 400;
   text-align: center;
+}
+
+.knockout-team-line .knockout-penalty-input {
+  width: 26px;
 }
 
 .knockout-date-input {
@@ -425,23 +467,6 @@
   cursor: pointer;
 }
 
-.knockout-penalty-editor {
-  min-height: 27px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 28px auto 28px;
-  align-items: center;
-  gap: 4px;
-  color: var(--muted);
-  font-size: 0.6rem;
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-.knockout-penalty-editor strong {
-  color: var(--muted);
-  font-size: 0.66rem;
-}
-
 .knockout-clear {
   min-height: 25px;
   border: 1px solid var(--line);
@@ -456,21 +481,6 @@
 .knockout-clear:hover {
   border-color: var(--pink);
   color: var(--text-strong);
-}
-
-.knockout-slot small,
-.knockout-path {
-  color: var(--muted);
-  font-size: 0.6rem;
-}
-
-.knockout-path {
-  min-height: 19px;
-  display: inline-flex;
-  align-items: center;
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.035);
-  padding: 0 6px;
 }
 
 .knockout-kickoff {
@@ -494,25 +504,25 @@
 @media (min-width: 921px) {
   .bracket-map.is-fit {
     grid-template-columns:
-      repeat(4, minmax(0, 1fr))
-      minmax(0, 1.05fr)
-      repeat(4, minmax(0, 1fr));
+      repeat(4, minmax(195px, 1fr))
+      minmax(215px, 1.05fr)
+      repeat(4, minmax(195px, 1fr));
     gap: 6px;
-    overflow-x: visible;
+    overflow-x: auto;
     align-items: stretch;
     min-height: calc(100vh - 108px);
     padding: 0;
   }
 
   .bracket-map.is-fit .round-card {
-    min-width: 0;
+    min-width: 195px;
     min-height: calc(100vh - 114px);
     max-height: none;
     border-radius: 4px;
   }
 
   .bracket-map.is-fit .side-center {
-    min-width: 0;
+    min-width: 215px;
     max-height: none;
     align-self: stretch;
   }
@@ -574,15 +584,14 @@
 
   .bracket-map.is-fit .knockout-date-input,
   .bracket-map.is-fit .knockout-kickoff,
-  .bracket-map.is-fit .knockout-clear,
-  .bracket-map.is-fit .knockout-penalty-editor {
+  .bracket-map.is-fit .knockout-clear {
     display: none;
   }
 
   .bracket-map.is-fit .knockout-team-line {
-    min-height: 23px;
-    grid-template-columns: minmax(0, 1fr) 18px;
-    gap: 3px;
+    min-height: 26px;
+    grid-template-columns: minmax(0, 1fr) 66px;
+    gap: 4px;
     padding: 0 4px;
   }
 
@@ -603,7 +612,20 @@
     font-size: 0.62rem;
   }
 
-  .bracket-map.is-fit .knockout-path,
+  .bracket-map.is-fit .knockout-score-cell {
+    min-width: 66px;
+    gap: 2px;
+  }
+
+  .bracket-map.is-fit .knockout-team-line input {
+    width: 28px;
+    height: 23px;
+  }
+
+  .bracket-map.is-fit .knockout-team-line .knockout-penalty-input {
+    width: 24px;
+  }
+
   .bracket-map.is-fit .knockout-status,
   .bracket-map.is-fit .penalty-line {
     display: none;
@@ -654,17 +676,17 @@
   }
 
   .bracket-map.is-fit.zoom-small .match-slot {
-    min-height: 30px;
+    min-height: 42px;
     padding: 3px;
   }
 
   .bracket-map.is-fit.zoom-small .knockout-team-line {
-    min-height: 18px;
+    min-height: 28px;
   }
 
   .bracket-map.is-fit.zoom-small .match-slot strong,
   .bracket-map.is-fit.zoom-small .knockout-team-line em {
-    font-size: 0.5rem;
+    font-size: 0.62rem;
   }
 
   .bracket-map.is-fit.zoom-small .knockout-match-code,
@@ -732,9 +754,9 @@
 
   .bracket-map {
     grid-template-columns:
-      repeat(4, minmax(190px, 1fr))
-      minmax(210px, 1.08fr)
-      repeat(4, minmax(190px, 1fr));
+      repeat(4, minmax(195px, 1fr))
+      minmax(215px, 1.08fr)
+      repeat(4, minmax(195px, 1fr));
   }
 
   .bracket-fit-toggle {
@@ -749,9 +771,9 @@
 @media (max-width: 640px) {
   .bracket-map {
     grid-template-columns:
-      repeat(4, minmax(180px, 1fr))
-      minmax(200px, 1.08fr)
-      repeat(4, minmax(180px, 1fr));
+      repeat(4, minmax(190px, 1fr))
+      minmax(210px, 1.08fr)
+      repeat(4, minmax(190px, 1fr));
     gap: 12px;
     padding: 8px 6px 16px;
   }

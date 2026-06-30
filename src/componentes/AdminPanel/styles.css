@@ -107,6 +107,10 @@
   border-bottom: 0;
 }
 
+.knockout-admin-match {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) 70px;
+}
+
 .admin-team {
   min-width: 0;
   display: flex;
@@ -147,19 +151,21 @@
   text-align: center;
 }
 
-.admin-penalties {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 52px 14px 52px;
+.admin-score-editor,
+.admin-inline-penalties {
+  display: flex;
   align-items: center;
   gap: 8px;
-  padding: 0 94px 10px 12px;
 }
 
-.admin-penalties span:first-child {
+.admin-score-editor {
+  justify-content: center;
+}
+
+.admin-inline-penalties {
   color: var(--muted);
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  text-transform: uppercase;
 }
 
 .admin-knockout-status {
@@ -204,16 +210,9 @@
   background: rgba(0, 255, 178, 0.18);
 }
 
-.admin-penalties input {
-  width: 52px;
+.admin-inline-penalties input {
+  width: 44px;
   height: 34px;
-  border: 1px solid rgba(0, 255, 178, 0.35);
-  border-radius: 6px;
-  color: var(--text-strong);
-  background: rgba(0, 255, 178, 0.07);
-  font: inherit;
-  font-weight: 800;
-  text-align: center;
 }
 
 .match-separator {
@@ -254,6 +253,10 @@
     padding: 8px;
   }
 
+  .knockout-admin-match {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
   .clear-result {
     grid-column: 1 / -1;
   }
@@ -262,9 +265,12 @@
     width: 44px;
   }
 
-  .admin-penalties {
-    grid-template-columns: 1fr 44px 10px 44px;
-    padding: 0 8px 10px;
+  .admin-score-editor {
+    gap: 6px;
+  }
+
+  .admin-inline-penalties {
+    gap: 5px;
   }
 
   .admin-knockout-status {
@@ -272,7 +278,7 @@
     padding: 0 8px 10px;
   }
 
-  .admin-penalties input {
-    width: 44px;
+  .admin-inline-penalties input {
+    width: 38px;
   }
 }
