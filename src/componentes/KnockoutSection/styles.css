@@ -1,4 +1,6 @@
 .knockout-section {
+  width: 98vw;
+  max-width: 98vw;
   padding-top: 20px;
 }
 
@@ -88,17 +90,11 @@
 .bracket-map {
   display: grid;
   grid-template-columns:
-    minmax(205px, 1fr)
-    minmax(205px, 1fr)
-    minmax(205px, 1fr)
-    minmax(205px, 1fr)
-    minmax(225px, 1.08fr)
-    minmax(205px, 1fr)
-    minmax(205px, 1fr)
-    minmax(205px, 1fr)
-    minmax(205px, 1fr);
+    repeat(4, minmax(185px, 1fr))
+    minmax(205px, 1.06fr)
+    repeat(4, minmax(185px, 1fr));
   align-items: stretch;
-  gap: 10px;
+  gap: 7px;
   overflow-x: auto;
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
@@ -131,7 +127,7 @@
 }
 
 .round-card {
-  min-width: 205px;
+  min-width: 185px;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -153,7 +149,7 @@
 }
 
 .side-center {
-  min-width: 225px;
+  min-width: 205px;
   align-self: center;
   border-color: rgba(0, 255, 178, 0.42);
   box-shadow: 0 24px 90px rgba(0, 255, 178, 0.08), 0 24px 80px rgba(0, 0, 0, 0.28);
@@ -203,8 +199,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  gap: 7px;
-  padding: 8px;
+  gap: 6px;
+  padding: 6px;
 }
 
 .final-slot-list {
@@ -308,13 +304,17 @@
 .knockout-team-line {
   min-height: 28px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 72px;
+  grid-template-columns: minmax(0, 1fr) 30px;
   align-items: center;
-  gap: 5px;
+  gap: 3px;
   padding: 0 5px;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.035);
+}
+
+.knockout-team-line.has-penalty {
+  grid-template-columns: minmax(0, 1fr) 66px;
 }
 
 .knockout-team-line.is-resolved {
@@ -358,12 +358,16 @@
 }
 
 .knockout-score-cell {
-  min-width: 72px;
+  min-width: 30px;
   display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 2px;
   white-space: nowrap;
+}
+
+.knockout-score-cell.has-penalty {
+  min-width: 66px;
 }
 
 .knockout-score-cell.has-penalty::before {
@@ -504,25 +508,25 @@
 @media (min-width: 921px) {
   .bracket-map.is-fit {
     grid-template-columns:
-      repeat(4, minmax(195px, 1fr))
-      minmax(215px, 1.05fr)
-      repeat(4, minmax(195px, 1fr));
-    gap: 6px;
-    overflow-x: auto;
+      repeat(4, minmax(0, 1fr))
+      minmax(0, 1.05fr)
+      repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    overflow-x: hidden;
     align-items: stretch;
     min-height: calc(100vh - 108px);
     padding: 0;
   }
 
   .bracket-map.is-fit .round-card {
-    min-width: 195px;
+    min-width: 0;
     min-height: calc(100vh - 114px);
     max-height: none;
     border-radius: 4px;
   }
 
   .bracket-map.is-fit .side-center {
-    min-width: 215px;
+    min-width: 0;
     max-height: none;
     align-self: stretch;
   }
@@ -543,8 +547,8 @@
   }
 
   .bracket-map.is-fit .slot-list {
-    gap: 5px;
-    padding: 5px;
+    gap: 4px;
+    padding: 4px;
   }
 
   .bracket-map.is-fit .final-slot-list {
@@ -552,6 +556,7 @@
   }
 
   .bracket-map.is-fit .match-slot {
+    min-width: 0;
     min-height: 38px;
     padding: 4px;
     border-style: solid;
@@ -589,10 +594,15 @@
   }
 
   .bracket-map.is-fit .knockout-team-line {
+    min-width: 0;
     min-height: 26px;
-    grid-template-columns: minmax(0, 1fr) 66px;
-    gap: 4px;
+    grid-template-columns: minmax(0, 1fr) 28px;
+    gap: 3px;
     padding: 0 4px;
+  }
+
+  .bracket-map.is-fit .knockout-team-line.has-penalty {
+    grid-template-columns: minmax(0, 1fr) 62px;
   }
 
   .bracket-map.is-fit .knockout-team-name {
@@ -613,8 +623,12 @@
   }
 
   .bracket-map.is-fit .knockout-score-cell {
-    min-width: 66px;
+    min-width: 28px;
     gap: 2px;
+  }
+
+  .bracket-map.is-fit .knockout-score-cell.has-penalty {
+    min-width: 62px;
   }
 
   .bracket-map.is-fit .knockout-team-line input {
@@ -754,9 +768,9 @@
 
   .bracket-map {
     grid-template-columns:
-      repeat(4, minmax(195px, 1fr))
-      minmax(215px, 1.08fr)
-      repeat(4, minmax(195px, 1fr));
+      repeat(4, minmax(180px, 1fr))
+      minmax(200px, 1.08fr)
+      repeat(4, minmax(180px, 1fr));
   }
 
   .bracket-fit-toggle {
@@ -771,10 +785,10 @@
 @media (max-width: 640px) {
   .bracket-map {
     grid-template-columns:
-      repeat(4, minmax(190px, 1fr))
-      minmax(210px, 1.08fr)
-      repeat(4, minmax(190px, 1fr));
-    gap: 12px;
+      repeat(4, minmax(175px, 1fr))
+      minmax(195px, 1.08fr)
+      repeat(4, minmax(175px, 1fr));
+    gap: 8px;
     padding: 8px 6px 16px;
   }
 

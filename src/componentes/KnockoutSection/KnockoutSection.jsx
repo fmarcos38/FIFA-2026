@@ -61,7 +61,7 @@ function TeamLine({ isAdmin, label, score, penalty, showPenalty, hasScore, input
   const flagUrl = isResolved ? getFlagUrl(label) : ''
 
   return (
-    <div className={`knockout-team-line ${isResolved ? 'is-resolved' : 'is-seed'}`}>
+    <div className={`knockout-team-line ${isResolved ? 'is-resolved' : 'is-seed'} ${showPenalty ? 'has-penalty' : ''}`}>
       <span className="knockout-team-name">
         {flagUrl && <img src={flagUrl} alt="" loading="lazy" />}
         <strong>{label}</strong>
