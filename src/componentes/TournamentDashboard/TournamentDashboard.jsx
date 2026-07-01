@@ -95,7 +95,8 @@ function getPossibleCross(seed, groups) {
   if (!match) return null
 
   const isHomeSeed = normalizeSeed(match.home.seed || '') === targetSeed
-  const opponent = isHomeSeed ? match.away.seed : match.home.seed
+  const opponentParticipant = isHomeSeed ? match.away : match.home
+  const opponent = opponentParticipant.team || opponentParticipant.seed
   const opponentSide = isHomeSeed ? 'away' : 'home'
   const opponentDetail = opponent?.includes('Mejor 3')
     ? resolveBestThirdSeedDetail(opponent, groups, `${match.id}:${opponentSide}`)

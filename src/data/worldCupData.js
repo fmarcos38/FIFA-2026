@@ -389,7 +389,7 @@ export const knockoutRounds = [
       { id: 'R32-4', home: { seed: '1° Grupo C' }, away: { seed: '2° Grupo F' }, kickoff: '2026-06-29T17:00:00.000Z' },
       { id: 'R32-6', home: { seed: '2° Grupo E' }, away: { seed: '2° Grupo I' }, kickoff: '2026-06-30T17:00:00.000Z' },
       { id: 'R32-7', home: { seed: '1° Grupo A' }, away: { seed: 'Mejor 3° C/E/F/H/I' }, kickoff: '2026-07-01T01:00:00.000Z' },
-      { id: 'R32-8', home: { seed: '1° Grupo L' }, away: { seed: 'Mejor 3° E/H/I/J/K' }, kickoff: '2026-07-01T16:00:00.000Z' },
+      { id: 'R32-8', home: { team: 'Inglaterra' }, away: { team: 'RD Congo' }, kickoff: '2026-07-01T16:00:00.000Z' },
       { id: 'R32-14', home: { seed: '1° Grupo J' }, away: { seed: '2° Grupo H' }, kickoff: '2026-07-03T22:00:00.000Z' },
       { id: 'R32-16', home: { seed: '2° Grupo D' }, away: { seed: '2° Grupo G' }, kickoff: '2026-07-03T18:00:00.000Z' },
       { id: 'R32-13', home: { seed: '1° Grupo B' }, away: { seed: 'Mejor 3° E/F/G/I/J' }, kickoff: '2026-07-03T03:00:00.000Z' },
@@ -604,6 +604,7 @@ function resolveSeedParticipant(seed, standingsByGroup = {}, bestThirdAssignment
 }
 
 function resolveKnockoutParticipant(participant, results, rounds, standingsByGroup, bestThirdAssignments, slotKey) {
+  if (participant.team) return participant.team
   if (participant.seed) return resolveSeedParticipant(participant.seed, standingsByGroup, bestThirdAssignments, slotKey)
 
   const previousMatch = findKnockoutMatch(participant.winnerOf, rounds)
