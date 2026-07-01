@@ -382,7 +382,7 @@ export const knockoutRounds = [
       { id: 'R32-5', home: { seed: '1° Grupo I' }, away: { seed: 'Mejor 3° C/D/F/G/H' }, kickoff: '2026-06-30T21:00:00.000Z' },
       { id: 'R32-1', home: { seed: '2° Grupo A' }, away: { seed: '2° Grupo B' }, kickoff: '2026-06-28T19:00:00.000Z' },
       { id: 'R32-3', home: { seed: '1° Grupo F' }, away: { seed: '2° Grupo C' }, kickoff: '2026-06-30T01:00:00.000Z' },
-      { id: 'R32-11', home: { seed: '2° Grupo K' }, away: { seed: '2° Grupo L' }, kickoff: '2026-07-02T23:00:00.000Z' },
+      { id: 'R32-11', home: { team: 'Portugal' }, away: { team: 'Croacia' }, kickoff: '2026-07-02T23:00:00.000Z' },
       { id: 'R32-12', home: { seed: '1° Grupo H' }, away: { seed: '2° Grupo J' }, kickoff: '2026-07-02T19:00:00.000Z' },
       { id: 'R32-9', home: { seed: '1° Grupo D' }, away: { seed: 'Mejor 3° B/E/F/I/J' }, kickoff: '2026-07-02T00:00:00.000Z' },
       { id: 'R32-10', home: { seed: '1° Grupo G' }, away: { seed: 'Mejor 3° A/E/H/I/J' }, kickoff: '2026-07-01T20:00:00.000Z' },
